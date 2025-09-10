@@ -41,8 +41,9 @@ namespace Project.Gameplay
 
             var destroyClip = controller[DestroyOverride];
             var length = destroyClip.length;
+            var time = TimeSpan.FromSeconds(length);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(length), cancellationToken: cancellationToken);
+            await UniTask.Delay(time, cancellationToken: cancellationToken);
         }
     }
 }

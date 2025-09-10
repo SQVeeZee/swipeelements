@@ -13,7 +13,9 @@ namespace Project.Gameplay
         private readonly BackgroundAnimationHandler _animationHandler;
         private readonly BackgroundConfig _backgroundConfig;
         private readonly ICanvasItem _canvasItem;
+        private readonly ICancellationToken _appCancellationToken;
         private readonly BalloonSinusAnimation _animationImplementation = new ();
+
         private CancellationTokenSource _cancellationTokenSource;
 
         [Inject]
@@ -22,13 +24,15 @@ namespace Project.Gameplay
             BalloonsContainer balloonsContainer,
             BackgroundAnimationHandler animationHandler,
             BackgroundConfig backgroundConfig,
-            [Inject(Id = CanvasIds.Background)] ICanvasItem canvasItem)
+            [Inject(Id = CanvasIds.Background)] ICanvasItem canvasItem,
+            [Inject(Id = AppCancellationToken.Id)] ICancellationToken appCancellationToken)
         {
             _backgroundTimerHandler = backgroundTimerHandler;
             _balloonsContainer = balloonsContainer;
             _animationHandler = animationHandler;
             _backgroundConfig = backgroundConfig;
             _canvasItem = canvasItem;
+            _appCancellationToken = appCancellationToken;
         }
 
         public void Initialize()
@@ -37,7 +41,7 @@ namespace Project.Gameplay
             _balloonsContainer.Initialize();
             _backgroundTimerHandler.Initialize();
             InitializeAnimationHandler();
-            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_appCancellationToken.Token);
         }
 
         private void InitializeAnimationHandler()
@@ -51,7 +55,6 @@ namespace Project.Gameplay
         {
             _backgroundTimerHandler.OnBackgroundTick -= BackgroundTickHandler;
             _backgroundTimerHandler.Dispose();
-            _animationHandler.Dispose();
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
         }

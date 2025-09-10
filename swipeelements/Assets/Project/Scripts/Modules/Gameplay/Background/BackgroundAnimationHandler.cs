@@ -13,9 +13,5 @@ namespace Project.Gameplay
 
         public async UniTask DoAnimationAsync(IAnimationImplementation animationImplementation, IMovableAnimated animatedElement, CancellationToken cancellationToken)
             => await animationImplementation.AnimateAsync(animatedElement.MovingObject, _animationConfig, cancellationToken);
-
-        public void Dispose()
-        {
-        }
     }
 }

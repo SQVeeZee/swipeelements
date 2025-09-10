@@ -1466,6 +1466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb855538208f43c088c1f673f18c4db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _runner: {fileID: 790080856}
   _cellsMovingConfig: {fileID: 11400000, guid: 9e4f07fb9d7e46cab69726ba59426381, type: 2}
 --- !u!1001 &7001939077614110314
 PrefabInstance:
@@ -1583,6 +1584,11 @@ PrefabInstance:
     - target: {fileID: 7419326944138253414, guid: 20d3a0fdd17fd4204878f7d631701ae4,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7419326944138253414, guid: 20d3a0fdd17fd4204878f7d631701ae4,
+        type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8745928820517211618, guid: 20d3a0fdd17fd4204878f7d631701ae4,

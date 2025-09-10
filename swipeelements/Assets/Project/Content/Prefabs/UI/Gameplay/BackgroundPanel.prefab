@@ -319,6 +319,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Type1_Balloon
       objectReference: {fileID: 0}
+    - target: {fileID: 4163942673732810541, guid: f7f5d29b34cb4b77afbda6aa11d655f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -454,6 +459,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Type1_Balloon
+      objectReference: {fileID: 0}
+    - target: {fileID: 4163942673732810541, guid: f7f5d29b34cb4b77afbda6aa11d655f1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -591,6 +601,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Type2_Balloon
       objectReference: {fileID: 0}
+    - target: {fileID: 4163942673732810541, guid: 02f0ce71d77f42b1a699f5e42175c789,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -726,6 +741,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Type2_Balloon
+      objectReference: {fileID: 0}
+    - target: {fileID: 4163942673732810541, guid: 02f0ce71d77f42b1a699f5e42175c789,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

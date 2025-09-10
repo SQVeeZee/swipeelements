@@ -10,11 +10,7 @@ namespace Project.Gameplay
         private readonly CellsMovingConfig _config;
 
         [Inject]
-        private CellsMovingController(
-            CellsMovingConfig config)
-        {
-            _config = config;
-        }
+        private CellsMovingController(CellsMovingConfig config) => _config = config;
 
         public async UniTask MoveTileAsync(CellObject cell, Vector3 end, CancellationToken cancellationToken)
         {
@@ -33,7 +29,6 @@ namespace Project.Gameplay
                 }
                 var easedT = curve.Evaluate(t);
                 cell.transform.position = Vector3.LerpUnclamped(start, end, easedT);
-
                 await UniTask.Yield(cancellationToken);
             }
             cell.transform.position = end;

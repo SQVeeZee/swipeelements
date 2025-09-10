@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Project.Gameplay.Puzzles;
+using UnityEngine;
 
 namespace Project.Gameplay
 {
@@ -25,7 +26,8 @@ namespace Project.Gameplay
             {
                 tasks.Add(CellsContainer.DestroyAsync(coord, cancellationToken));
             }
-            await UniTask.WhenAll(tasks);
+            Debug.Log(cancellationToken.IsCancellationRequested);
+            await UniTask.WhenAll(tasks).AttachExternalCancellation(cancellationToken);
         }
     }
 }

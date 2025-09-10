@@ -5,8 +5,6 @@ using Cysharp.Threading.Tasks;
 using ModestTree;
 using Project.Core;
 using Project.Gameplay.Puzzles;
-using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace Project.Gameplay
@@ -20,15 +18,7 @@ namespace Project.Gameplay
         private readonly ICancellationToken _levelCancellationToken;
         private readonly Queue<MergesStep> _steps = new();
 
-        public readonly ReactiveProperty<UniTaskCompletionSource<bool>> Visualizing = new();
-
-        public event Action<MergesStep> OnVisualizationStepFinished;
-        public event Action OnVisualizationFinished;
-
-        public event Action<CellInfo> OnCellRemoved;
-        public event Action<CellInfo> OnCellUpdated;
-        public event Action<CellInfo> OnFeatRemoved;
-        public event Action<CellInfo> OnFeatUpdated;
+        public bool IsVisualizing { get; private set; } = false;
 
         public CellsContainer CellsContainer => _cellsContainer;
 
@@ -47,11 +37,6 @@ namespace Project.Gameplay
             _levelCancellationToken = levelCancellationToken;
         }
 
-        public void OnCellRemove(CellInfo cell) => OnCellRemoved?.Invoke(cell);
-        public void OnFeatRemove(CellInfo cell) => OnFeatRemoved?.Invoke(cell);
-        public void OnCellUpdate(CellInfo cell) => OnCellUpdated?.Invoke(cell);
-        public void OnFeatUpdate(CellInfo cell) => OnFeatUpdated?.Invoke(cell);
-
         public void Initialize()
         {
             _mergesGame.OnGameChanged += OnGameChanged;
@@ -59,14 +44,8 @@ namespace Project.Gameplay
 
         public void Dispose()
         {
-            Visualizing.Value?.TrySetCanceled();
-            Visualizing.Value = null;
-        }
-
-        public void Terminate()
-        {
+            _steps.Clear();
             _mergesGame.OnGameChanged -= OnGameChanged;
-            Dispose();
         }
 
         private void OnGameChanged(MergesAction action, MergesState prevState, MergesStep step)
@@ -82,42 +61,32 @@ namespace Project.Gameplay
             }
 
             _steps.Enqueue(step);
+
+            if (IsVisualizing)
+            {
+                return;
+            }
             VisualizeSteps(_levelCancellationToken.Token).Forget();
         }
 
         private async UniTaskVoid VisualizeSteps(CancellationToken cancellationToken)
         {
-            if (Visualizing.Value != null)
-            {
-                return;
-            }
-            Visualizing.Value = new UniTaskCompletionSource<bool>();
+            IsVisualizing = true;
 
-            while (!_steps.IsEmpty())
+            try
             {
-                var frame = Time.frameCount;
-                var step = _steps.Dequeue();
-
-                await VisualizeStepAsync(step, cancellationToken);
-                if (frame != Time.frameCount)
+                while (!_steps.IsEmpty())
                 {
-                    continue;
+                    var step = _steps.Dequeue();
+
+                    await GetVisualizerForStepAsync(step, cancellationToken);
+                    await UniTask.Yield(cancellationToken);
                 }
-                await UniTask.Yield(cancellationToken);
             }
-
-            if (Visualizing.Value != null)
+            finally
             {
-                Visualizing.Value.TrySetResult(true);
+                IsVisualizing = false;
             }
-            OnVisualizationFinished?.Invoke();
-            Visualizing.Value = null;
-        }
-
-        private async UniTask VisualizeStepAsync(MergesStep step, CancellationToken cancellationToken)
-        {
-            await GetVisualizerForStepAsync(step, cancellationToken);
-            OnVisualizationStepFinished?.Invoke(step);
         }
 
         private UniTask GetVisualizerForStepAsync(MergesStep iteration, CancellationToken cancellationToken) =>

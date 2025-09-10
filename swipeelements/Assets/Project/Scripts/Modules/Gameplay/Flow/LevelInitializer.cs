@@ -1,3 +1,4 @@
+using System.Threading;
 using JetBrains.Annotations;
 using Level;
 using Profile;
@@ -43,12 +44,12 @@ namespace Project.Gameplay
         public void Initialize()
         {
             _poolManager.BindBoardPools();
-            _mergesBoard.Initialize();
             _animatorController.Initialize();
         }
 
         public void InitializeLevel(LevelData data)
         {
+            _mergesBoard.Initialize();
             _boardSettings.InitializeSettings(data);
             _orderController.Initialize(data);
             FitCamera(data);
@@ -59,13 +60,8 @@ namespace Project.Gameplay
 
         public void DisposeLevel()
         {
-            _cellsContainer.Clear();
             _mergesBoard.Dispose();
-        }
-
-        public void Terminate()
-        {
-            _mergesBoard.Terminate();
+            _cellsContainer.Clear();
         }
 
         private void FitCamera(LevelData data)

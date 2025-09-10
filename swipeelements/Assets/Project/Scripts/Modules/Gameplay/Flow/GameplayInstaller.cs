@@ -9,6 +9,8 @@ namespace Project.Gameplay
     public class GameplayInstaller : MonoInstaller
     {
         [SerializeField]
+        private Runner _runner;
+        [SerializeField]
         private CellsMovingConfig _cellsMovingConfig;
 
         public override void InstallBindings()
@@ -16,12 +18,12 @@ namespace Project.Gameplay
             Container.BindInterfacesAndSelfTo<GameplayFlowController>().AsSingle();
             Container.BindInterfacesAndSelfTo<LevelInitializer>().AsSingle();
             Container.BindInterfacesAndSelfTo<SessionController>().AsSingle();
-            Container.BindCancellationToken<LevelCancellationToken>(LevelCancellationToken.Id);
 
             BindInput();
             BindMoving();
             BindTimer();
             BindProfiles();
+            BindCancellationTokens();
         }
 
         private void BindInput()
@@ -48,6 +50,13 @@ namespace Project.Gameplay
             Container.BindService<ProfileService>();
             Container.BindProfile<GeneralProfile>();
             Container.BindProfile<SessionProfile>();
+        }
+
+        private void BindCancellationTokens()
+        {
+            Container.BindSelfRunCancellationToken<LevelCancellationToken>(LevelCancellationToken.Id);
+            var appCancellationToken = new AppCancellationToken(_runner.destroyCancellationToken);
+            Container.BindCancellationToken(appCancellationToken, AppCancellationToken.Id);
         }
     }
 }

@@ -16,11 +16,18 @@ namespace Project.Core.Utility
         public static void BindService<TService>(this DiContainer container)
             where TService : IService => container.BindInterfacesAndSelfTo<TService>().AsSingle();
 
-        public static void BindCancellationToken<TCancellationToken>(this DiContainer container, string id)
+        public static void BindSelfRunCancellationToken<TCancellationToken>(this DiContainer container, string id)
             where TCancellationToken : class, ICancellationToken, ICancellationTokenControl =>
             container.Bind(typeof(ICancellationToken), typeof(ICancellationTokenControl))
                 .WithId(id)
                 .To<TCancellationToken>()
+                .AsSingle();
+
+        public static void BindCancellationToken<TCancellationToken>(this DiContainer container, TCancellationToken cancellationToken, string id)
+            where TCancellationToken : class, ICancellationToken =>
+            container.Bind(typeof(ICancellationToken))
+                .WithId(id)
+                .FromInstance(cancellationToken)
                 .AsSingle();
     }
 }

@@ -6,6 +6,6 @@ namespace Project.Gameplay
 {
     public interface IAnimationImplementation
     {
-        UniTask AnimateAsync(RectTransform rectTransform, BalloonAnimationConfig config, CancellationToken ct);
+        UniTask AnimateAsync(RectTransform rectTransform, BalloonAnimationConfig config, CancellationToken cancellationToken);
     }
 }

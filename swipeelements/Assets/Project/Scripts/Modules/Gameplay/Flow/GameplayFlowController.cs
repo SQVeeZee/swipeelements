@@ -13,15 +13,18 @@ namespace Project.Gameplay
     {
         private readonly LevelController _levelController;
         private readonly LevelInitializer _levelInitializer;
+        private readonly MergesBoard _mergesBoard;
         private readonly ICancellationTokenControl _cancellationTokenControl;
 
         public GameplayFlowController(
             LevelController levelController,
             LevelInitializer levelInitializer,
+            MergesBoard mergesBoard,
             [Inject(Id = LevelCancellationToken.Id)] ICancellationTokenControl cancellationTokenControl)
         {
             _levelController = levelController;
             _levelInitializer = levelInitializer;
+            _mergesBoard = mergesBoard;
             _cancellationTokenControl = cancellationTokenControl;
         }
 
@@ -36,12 +39,11 @@ namespace Project.Gameplay
         void IDisposable.Dispose()
         {
             _levelController.OnLevelFinished -= HandleLevelResult;
-            _levelInitializer.Terminate();
         }
 
         private void StartNewSession()
         {
-            var token = _cancellationTokenControl.GetOrCreateToken();
+            var token = _cancellationTokenControl.CreateToken();
             var levelData = _levelController.GetCurrentLevel();
             _levelInitializer.InitializeLevel(levelData);
         }
@@ -53,16 +55,17 @@ namespace Project.Gameplay
                 case LevelResult.Success:
                 case LevelResult.Skip:
                 case LevelResult.Restart:
-                    FinishLevel();
-                    StartNewSession();
+                    WaitForVisualizeEnded().Forget();
                     break;
             }
         }
 
-        private void FinishLevel()
+        private async UniTask WaitForVisualizeEnded()
         {
             _cancellationTokenControl.Cancel();
             _levelInitializer.DisposeLevel();
+            await UniTask.WaitUntil(() => !_mergesBoard.IsVisualizing);
+            StartNewSession();
         }
     }
 }

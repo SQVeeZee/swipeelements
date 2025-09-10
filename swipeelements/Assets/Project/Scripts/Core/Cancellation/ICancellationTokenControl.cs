@@ -4,8 +4,7 @@ namespace Project.Core
 {
     public interface ICancellationTokenControl
     {
-        CancellationToken GetOrCreateToken();
+        CancellationToken CreateToken();
         void Cancel();
-        void Reset();
     }
 }
