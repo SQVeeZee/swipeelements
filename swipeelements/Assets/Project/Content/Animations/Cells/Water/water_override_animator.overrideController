@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: water_override_animator
+  m_Controller: {fileID: 9100000, guid: 467d96582f6842718c19eebbb5fe1ec3, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 9911d8d8a3ac441ca785db47540e07a2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 94a50791044343108e9aa9949162e81b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cd3decbb47c84c5593e17e974bd57493, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d9559c53fe3b4aaab1f6d01068b267f8, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c4917fbf7c244c31aae110270cca9086, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 3f1f576ca5c24d3fb153772acd4c0465, type: 2}

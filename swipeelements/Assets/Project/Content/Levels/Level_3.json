@@ -1,0 +1,40 @@
+{
+  "columns": 4,
+  "rows": 6,
+  "initial": {
+    "cells": [
+      [
+        { "cell_type": "type_2" },
+        { "cell_type": "type_2" },
+        { "cell_type": "type_1" },
+        { "cell_type": "type_2" },
+        { "cell_type": "type_2" },
+        { "cell_type": "type_2" }
+      ],
+      [
+        { "cell_type": "type_1" },
+        { "cell_type": "type_1" },
+        { "cell_type": "type_2" },
+        { "cell_type": "type_2" },
+        { "cell_type": "type_1" },
+        { "cell_type": "type_2" }
+      ],
+      [
+        { "cell_type": "type_2" },
+        { "cell_type": "type_2" },
+        { "cell_type": "type_1" },
+        { "cell_type": "empty" },
+        { "cell_type": "empty" },
+        { "cell_type": "empty" }
+      ],
+      [
+        { "cell_type": "type_2" },
+        { "cell_type": "type_2" },
+        { "cell_type": "type_1" },
+        { "cell_type": "type_2" },
+        { "cell_type": "empty" },
+        { "cell_type": "empty" }
+      ],
+    ]
+  }
+}

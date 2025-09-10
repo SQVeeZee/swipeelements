@@ -1,0 +1,28 @@
+{
+  "columns": 5,
+  "rows": 2,
+  "initial": {
+    "cells": [
+      [
+        { "cell_type": "type_1" },
+        { "cell_type": "type_1" }
+      ],
+      [
+        { "cell_type": "empty" },
+        { "cell_type": "empty" }
+      ],
+      [
+        { "cell_type": "type_1" },
+        { "cell_type": "type_2" }
+      ],
+      [
+        { "cell_type": "type_2" },
+        { "cell_type": "empty" }
+      ],
+      [
+        { "cell_type": "type_2" },
+        { "cell_type": "empty" }
+      ]
+    ]
+  }
+}
