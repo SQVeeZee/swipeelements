@@ -1,4 +1,5 @@
-using Project.Gameplay.Puzzles;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Project.Gameplay
@@ -6,15 +7,21 @@ namespace Project.Gameplay
     public class BoardSettings : MonoBehaviour
     {
         [SerializeField]
-        private BoardObject _boardObject;
-        [SerializeField]
-        private float _cellSize = 1f;
+        private Transform _cellsRoot;
 
-        public float CellSize => _cellSize;
+        private Dictionary<(int X, int Y), Vector3> _positions;
 
-        public Transform CellsContainer => _boardObject.CellsContainer;
+        public Transform CellsRoot => _cellsRoot;
 
-        public void InitializeSettings(ILevelData levelData) => _boardObject.SetupBoard(levelData, _cellSize);
-        public Vector3 GetCellPosition((int X, int Y) coord) => _boardObject.GetCellPosition(coord);
+        public void Initialize(Dictionary<(int X, int Y), Vector3> positions) => _positions = positions;
+
+        public Vector3 GetCellPosition((int X, int Y) coord)
+        {
+            if (_positions.TryGetValue(coord, out var position))
+            {
+                return position;
+            }
+            throw new Exception($"Can't find cell position for {coord}");
+        }
     }
 }

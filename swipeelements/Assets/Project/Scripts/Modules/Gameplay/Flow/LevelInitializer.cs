@@ -1,4 +1,3 @@
-using System.Threading;
 using JetBrains.Annotations;
 using Level;
 using Profile;
@@ -18,6 +17,7 @@ namespace Project.Gameplay
         private readonly BoardSettings _boardSettings;
         private readonly CellsContainer _cellsContainer;
         private readonly SessionController _sessionController;
+        private readonly GameGridCalculation _gameGridCalculation;
         private readonly ICameraFitter _cameraFitter;
 
         public LevelInitializer(
@@ -30,6 +30,7 @@ namespace Project.Gameplay
             BoardSettings boardSettings,
             CellsContainer cellsContainer,
             SessionController sessionController,
+            GameGridCalculation gameGridCalculation,
             ICameraFitter cameraFitter)
         {
             _poolManager = poolManager;
@@ -41,6 +42,7 @@ namespace Project.Gameplay
             _boardSettings = boardSettings;
             _cellsContainer = cellsContainer;
             _sessionController = sessionController;
+            _gameGridCalculation = gameGridCalculation;
             _cameraFitter = cameraFitter;
         }
 
@@ -50,16 +52,28 @@ namespace Project.Gameplay
             _animatorController.Initialize();
         }
 
-        public void InitializeLevel(LevelData data)
+        public void InitializeLevel(LevelData levelData)
         {
             _mergesBoard.Initialize();
-            _boardSettings.InitializeSettings(data);
-            _orderController.Initialize(data);
-            FitCamera(data);
+            FitCamera(levelData);
+            CalculateGridPositions(levelData);
+            _orderController.Initialize(levelData);
 
-            var state = _sessionProfile.MergesState ?? new MergesState(data);
-            _mergesGame.Initialize(state, data);
+            var state = _sessionProfile.MergesState ?? new MergesState(levelData);
+            _mergesGame.Initialize(state, levelData);
             _sessionController.Initialize();
+        }
+
+        private void CalculateGridPositions(LevelData levelData)
+        {
+            var gridPositions = _gameGridCalculation.CalculateGridPositions(levelData.Columns, levelData.Rows);
+            _boardSettings.Initialize(gridPositions);
+        }
+
+        private void FitCamera(LevelData levelData)
+        {
+            var bounds = _gameGridCalculation.GetBoardBounds(levelData.Columns, levelData.Rows);
+            _cameraFitter.FitCamera(bounds);
         }
 
         public void DisposeLevel()
@@ -67,12 +81,6 @@ namespace Project.Gameplay
             _sessionController.Dispose();
             _mergesBoard.Dispose();
             _cellsContainer.Clear();
-        }
-
-        private void FitCamera(LevelData data)
-        {
-            var bounds = BoardBoundsExtension.GetBoardBounds(data.Columns, data.Rows, _boardSettings.CellSize);
-            _cameraFitter.FitCamera(bounds);
         }
     }
 }

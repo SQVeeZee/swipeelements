@@ -84,7 +84,7 @@ namespace Project.Gameplay
 
         private bool TryRaycast(Vector3 screenPosition, out TileCellObject tileCellObject)
         {
-            tileCellObject = CameraRaycastUtility.RaycastFromScreen<TileCellObject>(_gameCamera.Camera, screenPosition);
+            tileCellObject = _gameCamera.RaycastFromScreen<TileCellObject>(screenPosition);
             return tileCellObject != null;
         }
     }

@@ -12,6 +12,8 @@ namespace Level
         private BoardSettings _boardSettings;
         [SerializeField]
         private LevelsConfig _levelsConfig;
+        [SerializeField]
+        private GameGridConfig _gameGridConfig;
 
         [Header("cells")]
         [SerializeField]
@@ -24,6 +26,7 @@ namespace Level
             BindLevel();
             BindPuzzles();
             BindCells();
+            BindGrid();
         }
 
         private void BindLevel()
@@ -33,6 +36,12 @@ namespace Level
             Container.Bind<LevelProgress>().AsSingle();
             Container.Bind<LevelsConfig>().FromInstance(_levelsConfig).AsSingle();
             Container.BindInterfacesAndSelfTo<BoardSettings>().FromInstance(_boardSettings).AsSingle();
+        }
+
+        private void BindGrid()
+        {
+            Container.Bind<GameGridCalculation>().AsSingle();
+            Container.Bind<GameGridConfig>().FromInstance(_gameGridConfig).AsSingle();
         }
 
         private void BindPuzzles()

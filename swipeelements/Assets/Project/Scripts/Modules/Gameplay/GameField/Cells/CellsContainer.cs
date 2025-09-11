@@ -40,7 +40,7 @@ namespace Project.Gameplay
 
         protected override CellObject CreateItem(MergesCell cell, (int X, int Y) coord)
         {
-            var rootContainer = _boardSettings.CellsContainer;
+            var rootContainer = _boardSettings.CellsRoot;
             var position = _boardSettings.GetCellPosition(coord);
             var cellObject = _factory.Create(cell, position, rootContainer);
             _cellOrderController.ApplyCellSortOrder(cellObject, coord);
