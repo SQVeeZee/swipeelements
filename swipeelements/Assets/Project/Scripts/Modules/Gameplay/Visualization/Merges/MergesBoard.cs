@@ -2,139 +2,116 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using ModestTree;
 using Project.Core;
 using Project.Gameplay.Puzzles;
 using Zenject;
 
 namespace Project.Gameplay
 {
-    public class MergesBoard
+    public class MergesBoard : IDisposable
     {
         private readonly MergesGame _mergesGame;
-        private readonly CellsContainer _cellsContainer;
-        private readonly CellsMovingSystem _cellsMovingSystem;
-        private readonly ILevelResultHandler _levelResultHandler;
+        private readonly StepsVisualizer _stepsVisualizer;
+        private readonly VisualizationProgress _visualizationProgress;
+        private readonly BoardLocker _boardLocker;
         private readonly ICancellationToken _levelCancellationToken;
-        private readonly Queue<MergesStep> _steps = new();
-
-        public bool IsVisualizing { get; private set; } = false;
-
-        public CellsContainer CellsContainer => _cellsContainer;
 
         [Inject]
         private MergesBoard(
             MergesGame mergesGame,
-            CellsContainer cellsContainer,
-            CellsMovingSystem cellsMovingSystem,
-            ILevelResultHandler levelResultHandler,
+            StepsVisualizer stepsVisualizer,
+            VisualizationProgress visualizationProgress,
+            BoardLocker boardLocker,
             [Inject(Id = LevelCancellationToken.Id)] ICancellationToken levelCancellationToken)
         {
             _mergesGame = mergesGame;
-            _cellsContainer = cellsContainer;
-            _cellsMovingSystem = cellsMovingSystem;
-            _levelResultHandler = levelResultHandler;
+            _stepsVisualizer = stepsVisualizer;
+            _visualizationProgress = visualizationProgress;
+            _boardLocker = boardLocker;
             _levelCancellationToken = levelCancellationToken;
         }
 
-        public void Initialize()
-        {
-            _mergesGame.OnGameChanged += OnGameChanged;
-        }
-
-        public void Dispose()
-        {
-            _steps.Clear();
-            _mergesGame.OnGameChanged -= OnGameChanged;
-        }
+        public void Initialize() => _mergesGame.OnGameChanged += OnGameChanged;
+        public void Dispose() => _mergesGame.OnGameChanged -= OnGameChanged;
 
         private void OnGameChanged(MergesAction action, MergesState prevState, MergesStep step)
         {
-            ApplyStep(action, prevState, step);
+            if (step != null)
+            {
+                ApplyStep(step, _levelCancellationToken.Token).Forget();
+            }
         }
 
-        private void ApplyStep(MergesAction action, MergesState prevState, MergesStep step)
+        private async UniTaskVoid ApplyStep(MergesStep step, CancellationToken cancellationToken)
         {
-            if (step == null)
+            switch (step)
             {
-                return;
+                case ILockedStep lockedStep:
+                    await ResolveLockedStep(step, step.GlobalId, lockedStep.LockedCoords, cancellationToken);
+                    break;
+                case CombineStep combineStep:
+                    await ResolveCombineStepAsync(combineStep, cancellationToken);
+                    break;
+                case WinGameStep winGameStep:
+                    await ResolveWinGameStep(winGameStep, cancellationToken);
+                    break;
+                default:
+                    await ResolveMergesStep(step, cancellationToken);
+                    break;
             }
-
-            _steps.Enqueue(step);
-
-            if (IsVisualizing)
-            {
-                return;
-            }
-            VisualizeSteps(_levelCancellationToken.Token).Forget();
         }
 
-        private async UniTaskVoid VisualizeSteps(CancellationToken cancellationToken)
+        private async UniTask ResolveLockedStep(MergesStep step, string stepId, HashSet<(int X, int Y)> coords, CancellationToken cancellationToken)
         {
-            IsVisualizing = true;
-
+            _boardLocker.AddLockedCells(stepId, coords);
             try
             {
-                while (!_steps.IsEmpty())
-                {
-                    var step = _steps.Dequeue();
-
-                    await GetVisualizerForStepAsync(step, cancellationToken);
-                    await UniTask.Yield(cancellationToken);
-                }
+                await _stepsVisualizer.VisualizeAsync(step, cancellationToken);
             }
             finally
             {
-                IsVisualizing = false;
+                _boardLocker.Remove(stepId);
             }
         }
 
-        private UniTask GetVisualizerForStepAsync(MergesStep iteration, CancellationToken cancellationToken) =>
-            iteration switch
+        private async UniTask ResolveCombineStepAsync(CombineStep combineStep, CancellationToken cancellationToken)
+        {
+            foreach (var inner in combineStep.Steps)
             {
-                InitializeGridStep step => InitializeGridAsync(step, cancellationToken),
-                SwitchCellsStep step => SwitchCellStepAsync(step, cancellationToken),
-                MoveCellStep step => MoveCellStepAsync(step, cancellationToken),
-                BoardDestroyStep step => BoardDestroyStepAsync(step, cancellationToken),
-                BoardGravityStep step => BoardGravityStepAsync(step, cancellationToken),
-                WinGameStep step => WinGameStepAsync(step, cancellationToken),
-                _ => throw new Exception($"Can't find visualizer for {iteration.GetType().Name}")
-            };
+                if (inner is ILockedStep innerLocked)
+                {
+                    _boardLocker.AddLockedCells(inner.GlobalId, innerLocked.LockedCoords);
+                }
+            }
 
-        private async UniTask InitializeGridAsync(InitializeGridStep step, CancellationToken cancellationToken)
-        {
-            var vs = new InitializeGridVisualizeStep(this, step);
-            await vs.ApplyAsync(cancellationToken);
+            try
+            {
+                await _stepsVisualizer.VisualizeAsync(combineStep, cancellationToken);
+            }
+            finally
+            {
+                foreach (var inner in combineStep.Steps)
+                {
+                    if (inner is ILockedStep)
+                    {
+                        _boardLocker.Remove(inner.GlobalId);
+                    }
+                }
+            }
         }
 
-        private async UniTask SwitchCellStepAsync(SwitchCellsStep step, CancellationToken cancellationToken)
+        private async UniTask ResolveWinGameStep(WinGameStep winGameStep, CancellationToken cancellationToken)
         {
-            var vs = new SwitchCellStepVisualizationStep(this, step, _cellsMovingSystem);
-            await vs.ApplyAsync(cancellationToken);
+            if (_visualizationProgress.IsVisualizing)
+            {
+                await UniTask.WaitWhile(() => _visualizationProgress.IsVisualizing, cancellationToken: cancellationToken);
+            }
+            await _stepsVisualizer.VisualizeAsync(winGameStep, cancellationToken);
         }
 
-        private async UniTask MoveCellStepAsync(MoveCellStep step, CancellationToken cancellationToken)
+        private async UniTask ResolveMergesStep(MergesStep step, CancellationToken cancellationToken)
         {
-            var vs = new MoveCellVisualizationStep(this, step, _cellsMovingSystem);
-            await vs.ApplyAsync(cancellationToken);
-        }
-
-        private async UniTask BoardDestroyStepAsync(BoardDestroyStep step, CancellationToken cancellationToken)
-        {
-            var vs = new BoardDestroyVisualizeStep(this, step);
-            await vs.ApplyAsync(cancellationToken);
-        }
-
-        private async UniTask BoardGravityStepAsync(BoardGravityStep step, CancellationToken cancellationToken)
-        {
-            var vs = new BoardGravityVisualizeStep(this, step, _cellsMovingSystem);
-            await vs.ApplyAsync(cancellationToken);
-        }
-
-        private async UniTask WinGameStepAsync(WinGameStep step, CancellationToken cancellationToken)
-        {
-            var vs = new WinGameVisualizationStep(this, step, _levelResultHandler);
-            await vs.ApplyAsync(cancellationToken);
+            await _stepsVisualizer.VisualizeAsync(step, cancellationToken);
         }
     }
 }

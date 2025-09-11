@@ -3,61 +3,54 @@ using System.Linq;
 
 namespace Project.Gameplay.Puzzles
 {
-    public class BoardDestroyStep : MergesStep
+    public class BoardDestroyStep : MergesStep, ILockedStep
     {
         public override bool MakeSense => DestroyedCells.Count > 0;
         public HashSet<(int X, int Y)> DestroyedCells { get; } = new();
+        public HashSet<(int X, int Y)> LockedCoords { get; } = new();
 
         private BoardDestroyStep(MergesState initial) : base(initial) { }
 
-        public static BoardDestroyStep CalculateStep(MergesState state)
+        public static BoardDestroyStep CalculateStep(MergesState state, HashSet<(int X, int Y)> ignored)
         {
             var step = new BoardDestroyStep(state);
-            var toDestroy = step.FindMatches();
+            var toDestroy = step.FindMatches(ignored);
 
             foreach (var coord in toDestroy)
             {
                 step.Final[coord] = MergesCell.Empty;
                 step.DestroyedCells.Add(coord);
+                step.LockedCoords.Add(coord);
             }
-
             return step;
         }
 
-        private HashSet<(int X, int Y)> FindMatches()
+        private HashSet<(int X, int Y)> FindMatches(HashSet<(int X, int Y)> ignored)
         {
             var visited = new HashSet<(int, int)>();
             var toDestroy = new HashSet<(int, int)>();
 
             foreach (var coord in Final.GetTileCoords())
             {
-                if (visited.Contains(coord))
-                {
+                if (visited.Contains(coord) || ignored.Contains(coord))
                     continue;
-                }
 
-                var region = FloodFill(coord);
+                var region = FloodFill(coord, ignored);
+
                 foreach (var c in region)
-                {
                     visited.Add(c);
-                }
 
                 if (!ContainsLine(region))
-                {
                     continue;
-                }
-                {
-                    foreach (var c in region)
-                    {
-                        toDestroy.Add(c);
-                    }
-                }
+
+                foreach (var c in region)
+                    toDestroy.Add(c);
             }
 
             return toDestroy;
         }
 
-        private List<(int, int)> FloodFill((int X, int Y) start)
+        private List<(int, int)> FloodFill((int X, int Y) start, HashSet<(int X, int Y)> ignored)
         {
             var result = new List<(int, int)>();
             var stack = new Stack<(int, int)>();
@@ -68,15 +61,11 @@ namespace Project.Gameplay.Puzzles
             while (stack.Count > 0)
             {
                 var (x, y) = stack.Pop();
-                if (result.Contains((x, y)))
-                {
+                if (result.Contains((x, y)) || ignored.Contains((x, y)))
                     continue;
-                }
 
                 if (!Final[(x, y)].IsTile || Final[(x, y)].CellType != targetType)
-                {
                     continue;
-                }
 
                 result.Add((x, y));
 
@@ -84,7 +73,8 @@ namespace Project.Gameplay.Puzzles
                 {
                     if (nx >= 0 && nx < Final.Columns &&
                         ny >= 0 && ny < Final.Rows &&
-                        !result.Contains((nx, ny)))
+                        !result.Contains((nx, ny)) &&
+                        !ignored.Contains((nx, ny)))
                     {
                         stack.Push((nx, ny));
                     }
@@ -93,6 +83,7 @@ namespace Project.Gameplay.Puzzles
 
             return result;
         }
+
 
         private IEnumerable<(int, int)> Neighbors(int x, int y)
         {

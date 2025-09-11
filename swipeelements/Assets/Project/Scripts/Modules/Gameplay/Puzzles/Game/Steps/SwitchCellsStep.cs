@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+
 namespace Project.Gameplay.Puzzles
 {
-    public class SwitchCellsStep : MergesStep
+    public class SwitchCellsStep : MergesStep, ILockedStep
     {
         public override bool MakeSense => true;
         public MoveData MoveData { get; private set; }
+        public HashSet<(int X, int Y)> LockedCoords { get; } = new();
 
         private SwitchCellsStep(MergesState initial) : base(initial)
         {
@@ -17,6 +20,10 @@ namespace Project.Gameplay.Puzzles
             step.Final[to] = step.Initial[from];
 
             step.MoveData = new MoveData(from, to);
+
+            step.LockedCoords.Add(from);
+            step.LockedCoords.Add(to);
+
             return step;
         }
     }

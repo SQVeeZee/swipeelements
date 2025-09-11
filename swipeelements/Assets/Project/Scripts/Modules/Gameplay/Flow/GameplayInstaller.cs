@@ -18,6 +18,8 @@ namespace Project.Gameplay
             Container.BindInterfacesAndSelfTo<GameplayFlowController>().AsSingle();
             Container.BindInterfacesAndSelfTo<LevelInitializer>().AsSingle();
             Container.BindInterfacesAndSelfTo<SessionController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PuzzleChecker>().AsSingle();
+            Container.BindInterfacesAndSelfTo<VisualizationProgress>().AsSingle();
 
             BindInput();
             BindMoving();

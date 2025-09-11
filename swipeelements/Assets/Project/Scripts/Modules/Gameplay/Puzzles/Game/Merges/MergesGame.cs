@@ -1,88 +1,122 @@
 using System;
-using Project.Gameplay.Puzzles.Gameplay;
+using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
 namespace Project.Gameplay.Puzzles
 {
+    [UsedImplicitly]
     public class MergesGame
     {
-        public MergesState State { get; private set; }
-        protected ILevelData LevelData;
+        private ILevelData _levelData;
+        private MergesState _state;
 
         public event Action<MergesAction, MergesState, MergesStep> OnGameChanged;
 
         public void Initialize(MergesState state, ILevelData levelData)
         {
-            State = state;
-            LevelData = levelData;
+            MergesStep.ResetCounters();
+            _state = state;
+            _levelData = levelData;
 
-            var dict = LevelData.InitialValues.ToDictionary();
+            var dict = _levelData.InitialValues.ToDictionary();
             if (dict != null)
             {
                 foreach (var cell in dict)
                 {
                     var coord = cell.Key;
-                    if (State[coord].CellType == CellType.None)
+                    if (_state[coord].CellType == CellType.None)
                     {
-                        State[coord] = new MergesCell(cell.Value);
+                        _state[coord] = new MergesCell(cell.Value);
                     }
                 }
             }
 
-            var gridStep = InitializeGridStep.CalculateStep(State, levelData);
+            var gridStep = InitializeGridStep.CalculateStep(_state, levelData);
             ApplyStep(gridStep, MergesAction.None);
         }
 
-        public void ApplySwipe((int X, int Y) from, (int X, int Y) to)
+        public void ApplySwipe((int X, int Y) from, (int X, int Y) to, HashSet<(int X, int Y)> ignored)
         {
             var moveData = new MoveData(from, to);
-            var step = TileActionStep.Create(State, moveData);
+            var step = TileActionStep.Create(_state, moveData);
             if (!step.MakeSense)
             {
                 return;
             }
 
-            ApplyStep(step, MergesAction.Recordable);
-            ResolveBoard();
-            TryWinGame(State);
+            var combineSteps = GetResolveBoardSteps(step.Final, ignored);
+            if (combineSteps.Count > 0)
+            {
+                var combinedSteps = new List<MergesStep>(new[] { step }.Concat(combineSteps));
+                var combineStep = CombineStep.CalculateStep(_state, combinedSteps);
+                ApplyStep(combineStep, MergesAction.Recordable);
+            }
+            else
+            {
+                ApplyStep(step, MergesAction.Recordable);
+            }
+
+            TryWinGame(_state);
         }
 
-        private void ResolveBoard()
+        public void ResolveBoard(HashSet<(int X, int Y)> ignored)
         {
-            bool changed;
+            var combineSteps = GetResolveBoardSteps(_state, ignored);
+            if (combineSteps.Count > 0)
+            {
+                var combineStep = CombineStep.CalculateStep(_state, combineSteps);
+                ApplyStep(combineStep, MergesAction.Recordable);
+            }
+            TryWinGame(_state);
+        }
+
+        private List<MergesStep> GetResolveBoardSteps(MergesState state, HashSet<(int X, int Y)> ignored)
+        {
+            var steps = new List<MergesStep>();
+            var changed = false;
             do
             {
-                var gravity = BoardGravityStep.CalculateStep(State);
-                ApplyStep(gravity, MergesAction.Recordable);
-                var destroy = BoardDestroyStep.CalculateStep(State);
-                ApplyStep(destroy, MergesAction.Recordable);
-
-                changed = destroy.MakeSense || gravity.MakeSense;
+                changed = false;
+                tryAddStep(BoardGravityStep.CalculateStep(state, ignored));
+                tryAddStep(BoardDestroyStep.CalculateStep(state, ignored));
             } while (changed);
+
+            return steps;
+
+            void tryAddStep(MergesStep step)
+            {
+                changed |= step.MakeSense;
+                if (step.MakeSense)
+                {
+                    steps.Add(step);
+                }
+                state = step.Final;
+            }
         }
 
-        private bool TryWinGame(MergesState state)
+        private void TryWinGame(MergesState state)
         {
             if (state.CountTiles() > 0)
             {
-                return false;
+                return;
             }
 
             var winStep = WinGameStep.CalculateStep(state);
             ApplyStep(winStep, MergesAction.Braking);
-            return true;
         }
 
-        public bool ApplyStep(MergesStep step, MergesAction action)
+
+        private void ApplyStep(MergesStep step, MergesAction action)
         {
             if (!step.MakeSense)
             {
-                return false;
+                return;
             }
 
-            var prev = State;
-            State = step.Final;
+            var prev = _state;
+            _state = step.Final;
             OnGameChanged?.Invoke(action, prev, step);
-            return true;
         }
     }
 }

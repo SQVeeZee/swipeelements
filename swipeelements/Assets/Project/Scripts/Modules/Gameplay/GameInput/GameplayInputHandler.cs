@@ -10,6 +10,7 @@ namespace Project.Gameplay
         private readonly InputController _inputController;
         private readonly CellsContainer _cellsContainer;
         private readonly MergesGame _mergesGame;
+        private readonly BoardLocker _boardLocker;
         private readonly ICameraView _gameCamera;
 
         private TileCellObject _startTile;
@@ -19,11 +20,13 @@ namespace Project.Gameplay
             InputController inputController,
             CellsContainer cellsContainer,
             MergesGame mergesGame,
+            BoardLocker boardLocker,
             [Inject(Id = CameraIds.GameCamera)] ICameraView gameCamera)
         {
             _inputController = inputController;
             _cellsContainer = cellsContainer;
             _mergesGame = mergesGame;
+            _boardLocker = boardLocker;
             _gameCamera = gameCamera;
         }
 
@@ -48,6 +51,11 @@ namespace Project.Gameplay
             {
                 return;
             }
+            if (!_cellsContainer.TryGetValue(startTile, out var coord) || _boardLocker.Contains(coord))
+            {
+                return;
+            }
+
             _startTile = startTile;
         }
 
@@ -66,7 +74,11 @@ namespace Project.Gameplay
                 SwipeDirection.Right => from.Right(),
                 _ => throw new ArgumentOutOfRangeException(nameof(swipeData.Direction), swipeData.Direction, null)
             };
-            _mergesGame.ApplySwipe(from, to);
+            if (!_boardLocker.ContainsAny(from, to))
+            {
+                var lockedCoords = _boardLocker.GetAllLockedCoords();
+                _mergesGame.ApplySwipe(from, to, lockedCoords);
+            }
             _startTile = null;
         }
 

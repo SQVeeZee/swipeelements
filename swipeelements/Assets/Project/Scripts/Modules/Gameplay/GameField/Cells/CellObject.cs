@@ -18,8 +18,6 @@ namespace Project.Gameplay
 
         public MergesCell Info { get; protected set; }
 
-        public Transform Root => _root;
-
         [Inject]
         private void Construct(
             CellsContainer cellsContainer,

@@ -17,6 +17,7 @@ namespace Project.Gameplay
         private readonly SessionProfile _sessionProfile;
         private readonly BoardSettings _boardSettings;
         private readonly CellsContainer _cellsContainer;
+        private readonly SessionController _sessionController;
         private readonly ICameraFitter _cameraFitter;
 
         public LevelInitializer(
@@ -28,6 +29,7 @@ namespace Project.Gameplay
             SessionProfile sessionProfile,
             BoardSettings boardSettings,
             CellsContainer cellsContainer,
+            SessionController sessionController,
             ICameraFitter cameraFitter)
         {
             _poolManager = poolManager;
@@ -38,6 +40,7 @@ namespace Project.Gameplay
             _sessionProfile = sessionProfile;
             _boardSettings = boardSettings;
             _cellsContainer = cellsContainer;
+            _sessionController = sessionController;
             _cameraFitter = cameraFitter;
         }
 
@@ -56,10 +59,12 @@ namespace Project.Gameplay
 
             var state = _sessionProfile.MergesState ?? new MergesState(data);
             _mergesGame.Initialize(state, data);
+            _sessionController.Initialize();
         }
 
         public void DisposeLevel()
         {
+            _sessionController.Dispose();
             _mergesBoard.Dispose();
             _cellsContainer.Clear();
         }

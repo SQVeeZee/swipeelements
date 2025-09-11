@@ -1,9 +1,11 @@
 using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
 namespace Project.Gameplay
 {
+    [UsedImplicitly]
     public class InputController : ITickable
     {
         public event Action<Vector2> OnMouseButtonDown;

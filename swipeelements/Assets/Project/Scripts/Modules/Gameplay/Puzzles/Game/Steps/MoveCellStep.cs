@@ -1,10 +1,13 @@
+using System.Collections.Generic;
+
 namespace Project.Gameplay.Puzzles
 {
-    public class MoveCellStep : MergesStep
+    public class MoveCellStep : MergesStep, ILockedStep
     {
         public override bool MakeSense => true;
 
         public MoveData MoveData { get; private set; }
+        public HashSet<(int X, int Y)> LockedCoords { get; } = new();
 
         private MoveCellStep(MergesState initial) : base(initial)
         {
@@ -15,12 +18,16 @@ namespace Project.Gameplay.Puzzles
         {
             var step = new MoveCellStep(state)
             {
-                MoveData = new MoveData(from, to)
+                MoveData = new MoveData(from, to),
             };
             step.Final[to] = step.Initial[from];
             step.Final[from] = step.Initial[from].ChangeCell(CellType.Empty);
 
+            step.LockedCoords.Add(to);
+            step.LockedCoords.Add(from);
+
             return step;
         }
+
     }
 }

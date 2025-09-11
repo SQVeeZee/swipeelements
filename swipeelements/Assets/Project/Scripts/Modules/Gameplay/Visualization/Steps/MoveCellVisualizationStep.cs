@@ -9,10 +9,10 @@ namespace Project.Gameplay
         private readonly CellsMovingSystem _cellsMovingSystem;
 
         public MoveCellVisualizationStep(
-            MergesBoard board,
+            StepsVisualizer visualizer,
             MoveCellStep step,
             CellsMovingSystem cellsMovingSystem)
-            : base(board, step)
+            : base(visualizer, step)
             => _cellsMovingSystem = cellsMovingSystem;
 
         public override async UniTask ApplyAsync(CancellationToken cancellationToken)

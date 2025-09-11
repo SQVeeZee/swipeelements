@@ -6,10 +6,10 @@ namespace Project.Gameplay
 {
     public class InitializeGridVisualizeStep: VisualizeStep<InitializeGridStep>
     {
-        public InitializeGridVisualizeStep(MergesBoard board, InitializeGridStep step) : base(board, step)
-        {
-
-        }
+        public InitializeGridVisualizeStep(
+            StepsVisualizer visualizer,
+            InitializeGridStep step)
+            : base(visualizer, step) { }
 
         public override UniTask ApplyAsync(CancellationToken cancellationToken)
         {

@@ -39,6 +39,8 @@ namespace Level
         {
             Container.Bind<MergesGame>().AsSingle();
             Container.Bind<MergesBoard>().AsSingle();
+            Container.Bind<StepsVisualizer>().AsSingle();
+            Container.Bind<BoardLocker>().AsSingle();
         }
 
         private void BindCells()

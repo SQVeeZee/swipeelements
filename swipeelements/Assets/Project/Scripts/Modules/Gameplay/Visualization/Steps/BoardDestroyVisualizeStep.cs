@@ -9,8 +9,8 @@ namespace Project.Gameplay
     public class BoardDestroyVisualizeStep : VisualizeStep<BoardDestroyStep>
     {
         public BoardDestroyVisualizeStep(
-            MergesBoard board,
-            BoardDestroyStep step) : base(board, step)
+            StepsVisualizer visualizer,
+            BoardDestroyStep step) : base(visualizer, step)
         {
         }
 

@@ -9,9 +9,9 @@ namespace Project.Gameplay
         private readonly ILevelResultHandler _levelResultHandler;
 
         public WinGameVisualizationStep(
-            MergesBoard board,
+            StepsVisualizer visualizer,
             WinGameStep step,
-            ILevelResultHandler levelResultHandler) : base(board, step)
+            ILevelResultHandler levelResultHandler) : base(visualizer, step)
             => _levelResultHandler = levelResultHandler;
 
         public override UniTask ApplyAsync(CancellationToken cancellationToken)

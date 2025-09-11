@@ -92,7 +92,7 @@ namespace Project.Gameplay
 
             if (CoordToCell.TryGetValue(to, out _))
             {
-                throw new Exception($"Can't move cells. Reason: destination cell [{to.X}:{to.Y}] are not empty");
+                throw new Exception($"Can't move cells:[{from.X}:{from.Y}]. Reason: destination cell [{to.X}:{to.Y}] are not empty");
             }
 
             CellToCoord.Remove(cell1);
