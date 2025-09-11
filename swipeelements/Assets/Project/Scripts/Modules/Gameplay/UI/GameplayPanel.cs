@@ -15,9 +15,7 @@ namespace UI
         private ILevelResultHandler _levelResultHandler;
 
         [Inject]
-        private void Construct(
-            ILevelResultHandler levelResultHandler)
-            => _levelResultHandler = levelResultHandler;
+        private void Construct(ILevelResultHandler levelResultHandler) => _levelResultHandler = levelResultHandler;
 
         private void Awake() => Initialize();
         private void OnDestroy() => Dispose();

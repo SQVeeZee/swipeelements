@@ -10,9 +10,7 @@ namespace Project.Gameplay
     {
         public BoardDestroyVisualizeStep(
             StepsVisualizer visualizer,
-            BoardDestroyStep step) : base(visualizer, step)
-        {
-        }
+            BoardDestroyStep step) : base(visualizer, step) { }
 
         public override async UniTask ApplyAsync(CancellationToken cancellationToken)
         {
@@ -26,7 +24,6 @@ namespace Project.Gameplay
             {
                 tasks.Add(CellsContainer.DestroyAsync(coord, cancellationToken));
             }
-            Debug.Log(cancellationToken.IsCancellationRequested);
             await UniTask.WhenAll(tasks).AttachExternalCancellation(cancellationToken);
         }
     }
