@@ -10,50 +10,25 @@ namespace Project.Gameplay
     {
         [SerializeField]
         private Runner _runner;
-        [SerializeField]
-        private CellsMovingConfig _cellsMovingConfig;
 
         public override void InstallBindings()
         {
             BindControllers();
             BindInput();
-            BindMoving();
-            BindTimer();
             BindProfiles();
             BindCancellationTokens();
-            BindDestroy();
         }
 
         private void BindControllers()
         {
             Container.BindInterfacesAndSelfTo<GameplayFlowController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameplayTimer>().AsSingle();
         }
 
         private void BindInput()
         {
             Container.BindInterfacesAndSelfTo<InputController>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameplayInputHandler>().AsSingle();
-        }
-
-        private void BindMoving()
-        {
-            Container.BindInterfacesAndSelfTo<CellsMovingSystem>().AsSingle();
-            Container.BindInterfacesAndSelfTo<CellsMovingController>().AsSingle();
-            Container.Bind<CellsMovingConfig>().FromInstance(_cellsMovingConfig).AsSingle();
-
-            Container.Bind<LinearMover>().AsSingle();
-            Container.Bind<FallingMover>().AsSingle();
-        }
-
-        private void BindDestroy()
-        {
-            Container.BindInterfacesAndSelfTo<DestroyCellsSystem>().AsSingle();
-        }
-
-        private void BindTimer()
-        {
-            Container.BindInterfacesAndSelfTo<GameplayTimer>().AsSingle();
-            Container.Bind<IdleTimer>().AsSingle();
         }
 
         private void BindProfiles()

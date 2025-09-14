@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Project
+namespace Project.LifeCycle
 {
     public class ApplicationEventsInstaller : MonoInstaller
     {

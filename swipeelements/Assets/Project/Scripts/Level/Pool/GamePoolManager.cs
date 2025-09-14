@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using Project.Gameplay;
 using Zenject;
 
-namespace Level
+namespace Project.Level
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public class GamePoolManager

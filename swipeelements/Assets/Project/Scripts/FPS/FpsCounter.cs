@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,13 +9,6 @@ namespace Project.FPS
         private Text _text;
 
         private float _deltaTime;
-
-        private void Awake()
-        {
-            var currentResolutionRefreshRate = Screen.currentResolution.refreshRateRatio;
-            var maxRefreshRate = Math.Max((int)Math.Ceiling(currentResolutionRefreshRate.value), 60);
-            Application.targetFrameRate = maxRefreshRate;
-        }
 
         private void Update()
         {

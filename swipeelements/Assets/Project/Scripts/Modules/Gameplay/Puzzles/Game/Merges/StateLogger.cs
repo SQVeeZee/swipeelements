@@ -1,8 +1,7 @@
 using System;
-using Project.Gameplay.Puzzles;
 using UnityEngine;
 
-namespace Project.Gameplay
+namespace Project.Gameplay.Puzzles
 {
     public static class StateLogger
     {
@@ -47,9 +46,8 @@ namespace Project.Gameplay
                 _ => throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null)
             };
 
-        private static string GetColor(MergesCell cell)
-        {
-            return cell.CellState switch
+        private static string GetColor(MergesCell cell) =>
+            cell.CellState switch
             {
                 CellState.Moving => "red",
                 CellState.Falling => "yellow",
@@ -57,6 +55,5 @@ namespace Project.Gameplay
                 CellState.Idle => "green",
                 _ => "white"
             };
-        }
     }
 }

@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Project.Core;
+using Project.LifeCycle;
 using UnityEngine;
 using Zenject;
 
@@ -60,7 +61,9 @@ namespace Project.Profile
         void ITickable.Tick()
         {
             if (_dirtySections.Count == 0)
+            {
                 return;
+            }
 
             foreach (var section in _dirtySections)
             {
@@ -70,10 +73,7 @@ namespace Project.Profile
             _dirtySections.Clear();
         }
 
-        private void MarkDirty(ProfileSection section)
-        {
-            _dirtySections.Add(section);
-        }
+        private void MarkDirty(ProfileSection section) => _dirtySections.Add(section);
 
         private void OnQuit() => SaveAll();
 

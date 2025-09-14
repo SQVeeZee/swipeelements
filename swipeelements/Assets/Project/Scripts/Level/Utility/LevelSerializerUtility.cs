@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using Project.Gameplay.Puzzles;
 using UnityEngine;
 
-namespace Level.Utility
+namespace Project.Level.Utility
 {
     public static class LevelSerializerUtility
     {

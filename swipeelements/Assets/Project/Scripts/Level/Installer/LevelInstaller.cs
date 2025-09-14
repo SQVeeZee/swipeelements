@@ -3,7 +3,7 @@ using Project.Gameplay.Puzzles;
 using UnityEngine;
 using Zenject;
 
-namespace Level
+namespace Project.Level
 {
     public class LevelInstaller : MonoInstaller
     {
@@ -20,6 +20,8 @@ namespace Level
         private CellsConfig _cellsConfig;
         [SerializeField]
         private TileIdleTimerConfig _tileIdleTimerConfig;
+        [SerializeField]
+        private CellsMovingConfig _cellsMovingConfig;
 
         public override void InstallBindings()
         {
@@ -27,6 +29,7 @@ namespace Level
             BindPuzzles();
             BindCells();
             BindGrid();
+            BindMoving();
         }
 
         private void BindLevel()
@@ -57,6 +60,7 @@ namespace Level
 
         private void BindCells()
         {
+            Container.BindInterfacesAndSelfTo<DestroyCellsSystem>().AsSingle();
             Container.Bind<CellOrderController>().AsSingle();
             Container.Bind<CellsConfig>().FromInstance(_cellsConfig).AsSingle();
             Container.Bind<CellsContainer>().AsSingle();
@@ -65,8 +69,19 @@ namespace Level
             BindTiles();
         }
 
+        private void BindMoving()
+        {
+            Container.BindInterfacesAndSelfTo<CellsMovingSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CellsMovingController>().AsSingle();
+            Container.Bind<CellsMovingConfig>().FromInstance(_cellsMovingConfig).AsSingle();
+
+            Container.Bind<LinearMover>().AsSingle();
+            Container.Bind<FallingMover>().AsSingle();
+        }
+
         private void BindTiles()
         {
+            Container.Bind<IdleTimer>().AsSingle();
             Container.Bind<TileAnimatorController>().AsSingle();
             Container.Bind<TileIdleTimerConfig>().FromInstance(_tileIdleTimerConfig).AsSingle();
         }

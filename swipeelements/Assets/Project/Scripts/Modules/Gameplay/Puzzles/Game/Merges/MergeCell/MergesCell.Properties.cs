@@ -1,8 +1,9 @@
+using System;
 using Newtonsoft.Json;
 
 namespace Project.Gameplay.Puzzles
 {
-    public partial struct MergesCell
+    public partial struct MergesCell : IEquatable<MergesCell>
     {
         [JsonIgnore]
         public bool IsVoid => CellType.IsVoid();
@@ -25,5 +26,7 @@ namespace Project.Gameplay.Puzzles
                                    (CellType.IsTile() && CellState.IsFalling());
         [JsonIgnore]
         public bool CanFalling => CellType.CanFalling() && CellState.CanFalling();
+
+        public bool Equals(MergesCell other) => CellType == other.CellType && CellState == other.CellState;
     }
 }

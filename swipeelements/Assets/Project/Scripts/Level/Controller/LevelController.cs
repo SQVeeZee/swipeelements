@@ -1,11 +1,11 @@
 using System;
-using Level.Utility;
 using Project.Gameplay;
 using Project.Gameplay.Puzzles;
+using Project.Level.Utility;
 using Project.Profile;
 using Zenject;
 
-namespace Level
+namespace Project.Level
 {
     public class LevelController : ILevelResultHandler
     {

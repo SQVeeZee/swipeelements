@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UniRx;
 using UnityEngine;
 using Zenject;
 
 namespace Project.Gameplay
 {
+    [UsedImplicitly]
     public class GameplayTimer : ITickable
     {
         private class Subscription
@@ -19,7 +21,7 @@ namespace Project.Gameplay
 
         public void Tick()
         {
-            float dt = Time.deltaTime;
+            var dt = Time.deltaTime;
             foreach (var sub in _subscriptions)
             {
                 sub.Elapsed += dt;

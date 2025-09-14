@@ -11,8 +11,6 @@ namespace Project.Gameplay
         private readonly List<Balloon> _pooledBalloons = new List<Balloon>(3);
         public int BalloonsInProgress => _balloons.Length - _pooledBalloons.Count;
 
-        public int FreeBalloons => _pooledBalloons.Count;
-
         public void Initialize()
         {
             foreach (var balloon in _balloons)

@@ -21,12 +21,12 @@ namespace Project.Gameplay.Puzzles
             {
                 sb.AppendLine("Grid:");
 
-                for (int y = 0; y < Rows; y++)
+                for (var y = 0; y < Rows; y++)
                 {
-                    for (int x = 0; x < Columns; x++)
+                    for (var x = 0; x < Columns; x++)
                     {
                         var cell = InitialValues.Cells[x][y];
-                        sb.Append($"{cell.CellType.ToString(),-7} "); // выравнивание по 7 символов
+                        sb.Append($"{cell.CellType.ToString(),-7} ");
                     }
                     sb.AppendLine();
                 }

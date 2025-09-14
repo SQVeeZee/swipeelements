@@ -19,10 +19,8 @@ namespace Project.Gameplay.Puzzles
         public static bool CanFalling(this CellState cellState) => cellState == CellState.Idle || cellState == CellState.Falling;
 
         public static bool IsFalling(this CellState cellState) => cellState == CellState.Falling;
-        // public static bool IsReserved(this CellState cellState) => cellState == CellState.Reserved;
 
-        public static MergesCell ChangeCell(this MergesCell cell, CellType type) => new(type);
         public static MergesCell ChangeCell(this MergesCell cell, CellState state) => new(cell.CellType, state);
-        public static MergesCell ChangeCell(this MergesCell cell, CellType type, CellState state) => new(type, state);
+        public static MergesCell ChangeCell(this MergesCell _, CellType type, CellState state) => new(type, state);
     }
 }

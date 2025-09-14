@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using Level;
+using Project.Level;
 using Project.Gameplay.Puzzles;
 using Project.Profile;
 

@@ -1,4 +1,4 @@
-namespace Project
+namespace Project.LifeCycle
 {
     public class ApplicationQuitSignal
     {
@@ -6,7 +6,7 @@ namespace Project
 
     public class ApplicationPauseSignal
     {
-        public bool IsPaused;
+        public bool IsPaused { get; }
         public ApplicationPauseSignal(bool isPaused) => IsPaused = isPaused;
     }
 

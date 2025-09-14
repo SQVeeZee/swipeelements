@@ -20,10 +20,10 @@ namespace Project.Gameplay
             _backgroundConfig = backgroundConfig;
         }
 
-        public void Initialize() => Subcribe();
+        public void Initialize() => Subscribe();
         public void Dispose() => _subscription?.Dispose();
 
-        private void Subcribe() => _subscription = _gameplayTimer.Subscribe(_backgroundConfig.SpawnInterval, BackgroundTickHandler);
+        private void Subscribe() => _subscription = _gameplayTimer.Subscribe(_backgroundConfig.SpawnInterval, BackgroundTickHandler);
 
         private void BackgroundTickHandler() => OnBackgroundTick?.Invoke();
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
-using Level;
+using Project.Level;
 using Project.Core;
 using Project.Profile;
 using Zenject;

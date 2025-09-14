@@ -46,7 +46,6 @@ namespace Project.Gameplay
         private UniTask GetVisualizerForStepAsync(MergesStep iteration, CancellationToken cancellationToken) =>
             iteration switch
             {
-                CombineStep step => CombineStepAsync(step, cancellationToken),
                 InitializeGridStep step => InitializeGridAsync(step, cancellationToken),
                 SwitchCellsStep step => SwitchCellStepAsync(step, cancellationToken),
                 MoveCellStep step => MoveCellStepAsync(step, cancellationToken),
@@ -55,14 +54,6 @@ namespace Project.Gameplay
                 WinGameStep step => WinGameStepAsync(step, cancellationToken),
                 _ => throw new Exception($"Can't find visualizer for {iteration.GetType().Name}")
             };
-
-        private async UniTask CombineStepAsync(CombineStep combineStep, CancellationToken cancellationToken)
-        {
-            foreach (var mergesStep in combineStep.Steps)
-            {
-                await GetVisualizerForStepAsync(mergesStep, cancellationToken);
-            }
-        }
 
         private async UniTask InitializeGridAsync(InitializeGridStep step, CancellationToken cancellationToken)
         {

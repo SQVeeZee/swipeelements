@@ -1,4 +1,4 @@
-namespace Level
+namespace Project.Level
 {
     public enum LevelResult : byte
     {

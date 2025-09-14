@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -7,6 +8,8 @@ using Zenject;
 
 public class Runner : MonoBehaviour
 {
+    private const int DefaultFPS = 60;
+
     [SerializeField]
     private SceneContext _sceneContext;
 
@@ -17,8 +20,9 @@ public class Runner : MonoBehaviour
 
     private async UniTaskVoid RunAsync(CancellationToken cancellationToken)
     {
-        _sceneContext.Run();
+        SetApplicationFramerate();
 
+        _sceneContext.Run();
         await InitializeServices(cancellationToken);
         await ModulesInitialization(cancellationToken);
     }
@@ -33,6 +37,13 @@ public class Runner : MonoBehaviour
     {
         var tasks = _sceneContext.Container.ResolveAll<IInitializableModuleAsync>();
         await UniTask.WhenAll(tasks.Select(i => i.InitializeAsync(cancellationToken))).AttachExternalCancellation(cancellationToken);
+    }
+
+    private void SetApplicationFramerate()
+    {
+        var currentResolutionRefreshRate = Screen.currentResolution.refreshRateRatio;
+        var maxRefreshRate = Math.Max((int)Math.Ceiling(currentResolutionRefreshRate.value), DefaultFPS);
+        Application.targetFrameRate = maxRefreshRate;
     }
 
     private void OnDestroy()

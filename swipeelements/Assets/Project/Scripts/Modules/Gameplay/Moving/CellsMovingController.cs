@@ -44,7 +44,6 @@ namespace Project.Gameplay
 
             state.Elapsed = 0f;
             state.IsRunning = true;
-            state.MoveType = moveType;
 
             await mover.RunAsync(state, cancellationToken);
         }

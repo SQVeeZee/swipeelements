@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Project.Gameplay.Puzzles;
-using UnityEngine;
 
 namespace Project.Gameplay
 {
@@ -18,9 +17,7 @@ namespace Project.Gameplay
             _destroyCellsSystem = destroyCellsSystem;
 
         public override async UniTask ApplyAsync(CancellationToken cancellationToken)
-        {
-            await DestroyCellsAsync(_cellsStep.DestroyedCells, cancellationToken);
-        }
+            => await DestroyCellsAsync(_cellsStep.DestroyedCells, cancellationToken);
 
         private async UniTask DestroyCellsAsync(HashSet<(int X, int Y)> coords, CancellationToken cancellationToken)
         {

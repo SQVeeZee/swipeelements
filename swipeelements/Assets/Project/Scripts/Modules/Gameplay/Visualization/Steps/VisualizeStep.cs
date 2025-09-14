@@ -9,15 +9,15 @@ namespace Project.Gameplay
     {
         protected readonly T _cellsStep;
 
-        protected readonly StepsVisualizer Visualizer;
+        protected readonly StepsVisualizer _visualizer;
         protected CellsContainer CellsContainer { get; private set; }
 
         protected VisualizeStep(StepsVisualizer visualizer, T cellsStep)
         {
             _cellsStep = cellsStep;
-            Visualizer = visualizer;
+            _visualizer = visualizer;
 
-            CellsContainer = Visualizer.CellsContainer;
+            CellsContainer = _visualizer.CellsContainer;
         }
 
         public abstract UniTask ApplyAsync(CancellationToken cancellationToken);

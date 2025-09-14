@@ -13,7 +13,6 @@ namespace Project.Gameplay
         public AnimationCurve Curve;
 
         public bool IsRunning;
-        public CellMoveType MoveType;
 
         public float Acceleration;
         public float MaxSpeed;

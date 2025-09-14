@@ -1,7 +1,7 @@
 using Project.Profile;
 using Zenject;
 
-namespace Level
+namespace Project.Level
 {
     public class LevelProgress
     {

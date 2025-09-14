@@ -1,9 +1,10 @@
 using System;
 using JetBrains.Annotations;
+using Project.Gameplay.Puzzles;
 using Project.Profile;
 using Zenject;
 
-namespace Project.Gameplay.Puzzles
+namespace Project.Gameplay
 {
     [UsedImplicitly]
     public class MergesGame
@@ -125,7 +126,9 @@ namespace Project.Gameplay.Puzzles
                     return;
                 case MergesAction.Recordable:
                     _sessionProfile.MergesState = step.Final;
+#if STATE_LOGGER
                     _sessionProfile.MergesState.LogState(step.GlobalId);
+#endif
                     break;
                 case MergesAction.Braking:
                     _sessionProfile.Clear();
