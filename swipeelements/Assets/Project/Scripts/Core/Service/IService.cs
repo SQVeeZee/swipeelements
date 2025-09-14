@@ -5,6 +5,7 @@ namespace Project.Core
 {
     public interface IService
     {
-        UniTask InitializeAsync(CancellationToken cancellationToken);
+        UniTask InitializeServiceAsync(CancellationToken cancellationToken);
+        void Dispose();
     }
 }

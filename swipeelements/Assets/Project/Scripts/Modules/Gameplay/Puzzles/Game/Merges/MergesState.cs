@@ -38,8 +38,27 @@ namespace Project.Gameplay.Puzzles
             }
         }
 
-        public MergesState(ILevelData data, MergesCell defaultValue = default)
-            : this(data.Columns, data.Rows, defaultValue) { }
+        public MergesState(ILevelData levelData, MergesCell defaultValue = default)
+            : this(levelData.Columns, levelData.Rows, defaultValue)
+        {
+            var dict = levelData.InitialValues?.ToDictionary();
+            if (dict == null)
+            {
+                return;
+            }
+
+            foreach (var cell in dict)
+            {
+                var coord = cell.Key;
+
+                if (_cells[coord.X, coord.Y].CellType == CellType.None)
+                {
+                    var cellType = cell.Value.CellType;
+                    var cellState = cellType.IsTile() ? CellState.Idle : CellState.None;
+                    _cells[coord.X, coord.Y] = new MergesCell(cellType, cellState);
+                }
+            }
+        }
 
         public MergesState Clone()
         {

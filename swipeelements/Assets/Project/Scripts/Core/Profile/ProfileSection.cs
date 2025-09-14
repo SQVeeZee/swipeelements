@@ -12,14 +12,11 @@ namespace Project.Core
         public virtual string Serialize()
             => JsonConvert.SerializeObject(this, Formatting.Indented);
 
-        public virtual void Deserialize(string json)
-        {
+        public virtual void Deserialize(string json) =>
             JsonConvert.PopulateObject(json, this, new JsonSerializerSettings
             {
                 ObjectCreationHandling = ObjectCreationHandling.Replace
             });
-        }
-
 
         public void Save() => OnChanged?.Invoke(this);
     }

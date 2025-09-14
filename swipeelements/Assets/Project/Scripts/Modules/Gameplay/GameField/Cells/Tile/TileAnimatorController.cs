@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Gameplay.Puzzles;
 using UnityEngine;
 using Zenject;
 
@@ -33,7 +34,14 @@ namespace Project.Gameplay
 
         private void IdleTimerTickHandler(int fieldPercentage)
         {
-            var tiles = _cellsContainer.GetAllTiles();
+            var tiles = new List<TileCellObject>();
+            foreach (var cell in _cellsContainer)
+            {
+                if (cell is TileCellObject { Info: { CellState: CellState.Idle } } tileCellObject)
+                {
+                    tiles.Add(tileCellObject);
+                }
+            }
             if (tiles.Count == 0)
             {
                 return;

@@ -6,15 +6,20 @@ using UnityEngine;
 
 namespace Project.Gameplay
 {
-    public class BoardDestroyVisualizeStep : VisualizeStep<BoardDestroyStep>
+    public class BoardDestroyVisualizeStep : VisualizeStep<DestroyCellsStep>
     {
+        private readonly DestroyCellsSystem _destroyCellsSystem;
+
         public BoardDestroyVisualizeStep(
             StepsVisualizer visualizer,
-            BoardDestroyStep step) : base(visualizer, step) { }
+            DestroyCellsStep cellsStep,
+            DestroyCellsSystem destroyCellsSystem)
+            : base(visualizer, cellsStep) =>
+            _destroyCellsSystem = destroyCellsSystem;
 
         public override async UniTask ApplyAsync(CancellationToken cancellationToken)
         {
-            await DestroyCellsAsync(Step.DestroyedCells, cancellationToken);
+            await DestroyCellsAsync(_cellsStep.DestroyedCells, cancellationToken);
         }
 
         private async UniTask DestroyCellsAsync(HashSet<(int X, int Y)> coords, CancellationToken cancellationToken)
@@ -22,7 +27,7 @@ namespace Project.Gameplay
             var tasks = new List<UniTask>();
             foreach (var coord in coords)
             {
-                tasks.Add(CellsContainer.DestroyAsync(coord, cancellationToken));
+                tasks.Add(_destroyCellsSystem.DestroyCellAsync(coord, cancellationToken));
             }
             await UniTask.WhenAll(tasks).AttachExternalCancellation(cancellationToken);
         }

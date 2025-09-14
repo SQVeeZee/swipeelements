@@ -499,7 +499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0214a062079a463c878c92b53a9bde26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cellsRoot: {fileID: 0}
+  _cellsRoot: {fileID: 687771163}
 --- !u!1 &389382211
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,6 +699,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 603d4c0ef6fc4e14a95ae86e89da67ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &627739451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 627739452}
+  - component: {fileID: 627739453}
+  m_Layer: 0
+  m_Name: UnityLifeCycle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &627739452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627739451}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 803399365}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &627739453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627739451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b4978e5f6ac4f338c227dbca4f2797f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &649882056
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,6 +922,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneContext: {fileID: 1629181583}
+--- !u!1 &803399364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 803399365}
+  - component: {fileID: 803399366}
+  m_Layer: 0
+  m_Name: UnityLifecycleInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &803399365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803399364}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 627739452}
+  m_Father: {fileID: 1629181584}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &803399366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803399364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ebfc4bb2a84409a9494bba0b37f362b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _applicationEvents: {fileID: 627739453}
 --- !u!1 &807276766
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,7 +1058,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1056467697}
-  - component: {fileID: 1056467698}
   m_Layer: 0
   m_Name: BoardObject
   m_TagString: Untagged
@@ -992,21 +1081,6 @@ Transform:
   - {fileID: 687771163}
   m_Father: {fileID: 359419505}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1056467698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1056467696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: deb050df94154a35a31254addc3c9993, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cellsContainer: {fileID: 687771163}
-  _uiSafeArea: {fileID: 0}
-  _config: {fileID: 11400000, guid: ccab95fa4892451fb47c2e0a520d84de, type: 2}
 --- !u!1 &1105700729
 GameObject:
   m_ObjectHideFlags: 0
@@ -1268,6 +1342,7 @@ MonoBehaviour:
   - {fileID: 299990674}
   - {fileID: 936077932}
   - {fileID: 298808788}
+  - {fileID: 803399366}
   _installerPrefabs: []
   _autoRun: 0
   OnPreInstall:
@@ -1303,6 +1378,7 @@ Transform:
   - {fileID: 299990672}
   - {fileID: 936077930}
   - {fileID: 298808786}
+  - {fileID: 803399365}
   m_Father: {fileID: 1105700730}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1679998737 stripped

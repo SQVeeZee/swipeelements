@@ -1,52 +1,84 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Project.Gameplay;
 using Project.Gameplay.Puzzles;
 using Zenject;
 
-namespace Project.Gameplay
+public class CellsMovingSystem : ISystemClear
 {
-    public class CellsMovingSystem
+    private readonly CellsContainer _cellsContainer;
+    private readonly CellsMovingController _movingController;
+    private readonly CellOrderController _orderController;
+
+    public MovingCellsContainer MovingContainer { get; } = new();
+
+    [Inject]
+    private CellsMovingSystem(
+        CellsContainer cellsContainer,
+        CellsMovingController movingController,
+        CellOrderController orderController)
     {
-        private readonly CellsContainer _cellsContainer;
-        private readonly CellsMovingController _movingController;
-        private readonly CellOrderController _orderController;
+        _cellsContainer = cellsContainer;
+        _movingController = movingController;
+        _orderController = orderController;
+    }
 
-        [Inject]
-        private CellsMovingSystem(
-            CellsContainer cellsContainer,
-            CellsMovingController cellsMovingController,
-            CellOrderController cellOrderController)
-        {
-            _cellsContainer = cellsContainer;
-            _movingController = cellsMovingController;
-            _orderController = cellOrderController;
-        }
+    void ISystemClear.Clear()
+    {
+        MovingContainer.Clear();
+        _movingController.Clear();
+    }
 
-        public async UniTask SwitchTilesAsync(MoveData switchData, CancellationToken cancellationToken)
-        {
-            await UniTask.WhenAll(
-                MoveTileAsync(switchData.From, switchData.To, cancellationToken),
-                MoveTileAsync(switchData.To, switchData.From, cancellationToken)
-            );
-            _cellsContainer.Swap(switchData.From, switchData.To);
-        }
+    void ISystemClear.Terminate()
+    {
+        MovingContainer.Clear();
+        _movingController.Clear();
+    }
 
-        public async UniTask MoveTileAsync(MoveData moveDataData, CancellationToken cancellationToken)
-        {
-            await MoveTileAsync(moveDataData.From, moveDataData.To, cancellationToken);
-            _cellsContainer.Move(moveDataData.From, moveDataData.To);
-        }
+    public async UniTask SwitchTilesAsync(MoveData switchData, CancellationToken cancellationToken)
+    {
+        MovingContainer.AddMoving(switchData);
+        await UniTask.WhenAll(
+            AnimateMoveAsync(switchData, CellMoveType.Switching, cancellationToken),
+            AnimateMoveAsync(new MoveData(switchData.To, switchData.From), CellMoveType.Switching, cancellationToken));
+        MovingContainer.RemoveMoving(switchData);
 
-        private async UniTask MoveTileAsync((int X, int Y) from, (int X, int Y) to, CancellationToken cancellationToken)
-        {
-            var tile = _cellsContainer[from];
-            await MoveTileAsync(tile, to, cancellationToken);
-        }
+        _cellsContainer.Swap(switchData.From, switchData.To);
+    }
 
-        private async UniTask MoveTileAsync(CellObject cellObject, (int X, int Y) to, CancellationToken cancellationToken)
-        {
-            await _movingController.MoveTileAsync(cellObject, _cellsContainer.GetCellPosition(to), cancellationToken);
-            _orderController.ApplyCellSortOrder(cellObject, to);
-        }
+    public async UniTask MoveTileAsync(MoveData moveData, CancellationToken cancellationToken)
+    {
+        MovingContainer.AddMoving(moveData);
+        await AnimateAndApplyMoveAsync(moveData, CellMoveType.Moving, cancellationToken);
+        MovingContainer.RemoveMoving(moveData);
+    }
+
+    public async UniTask FallTileAsync(FallingData data, CancellationToken cancellationToken)
+    {
+        MovingContainer.AddFalling(data);
+        await AnimateAndApplyMoveAsync(data.MoveData, CellMoveType.Falling, cancellationToken);
+        MovingContainer.RemoveFalling(data);
+    }
+
+    public void UpdateFallingCell(FallingData data)
+    {
+        var moveData = data.MoveData;
+        var cell = _cellsContainer[moveData.From];
+        var position = _cellsContainer.GetCellPosition(moveData.To);
+        _movingController.UpdateTileMove(cell, position, CellMoveType.Falling);
+    }
+
+    private async UniTask AnimateAndApplyMoveAsync(MoveData moveData, CellMoveType moveType, CancellationToken cancellationToken)
+    {
+        await AnimateMoveAsync(moveData, moveType, cancellationToken);
+        _cellsContainer.Move(moveData.From, moveData.To);
+    }
+
+    private async UniTask AnimateMoveAsync(MoveData moveData, CellMoveType moveType, CancellationToken cancellationToken)
+    {
+        var cell = _cellsContainer[moveData.From];
+        var position = _cellsContainer.GetCellPosition(moveData.To);
+        await _movingController.MoveTileAsync(cell, position, moveType, cancellationToken);
+        _orderController.ApplyCellSortOrder(cell, moveData.To);
     }
 }

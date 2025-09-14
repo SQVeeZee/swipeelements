@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Level;
-using Profile;
 using Project.Gameplay.Puzzles;
+using Project.Profile;
 
 namespace Project.Gameplay
 {
@@ -16,7 +16,6 @@ namespace Project.Gameplay
         private readonly SessionProfile _sessionProfile;
         private readonly BoardSettings _boardSettings;
         private readonly CellsContainer _cellsContainer;
-        private readonly SessionController _sessionController;
         private readonly GameGridCalculation _gameGridCalculation;
         private readonly ICameraFitter _cameraFitter;
 
@@ -29,7 +28,6 @@ namespace Project.Gameplay
             SessionProfile sessionProfile,
             BoardSettings boardSettings,
             CellsContainer cellsContainer,
-            SessionController sessionController,
             GameGridCalculation gameGridCalculation,
             ICameraFitter cameraFitter)
         {
@@ -41,7 +39,6 @@ namespace Project.Gameplay
             _sessionProfile = sessionProfile;
             _boardSettings = boardSettings;
             _cellsContainer = cellsContainer;
-            _sessionController = sessionController;
             _gameGridCalculation = gameGridCalculation;
             _cameraFitter = cameraFitter;
         }
@@ -52,6 +49,11 @@ namespace Project.Gameplay
             _animatorController.Initialize();
         }
 
+        public void Terminate()
+        {
+            _animatorController.Dispose();
+        }
+
         public void InitializeLevel(LevelData levelData)
         {
             _mergesBoard.Initialize();
@@ -59,9 +61,19 @@ namespace Project.Gameplay
             CalculateGridPositions(levelData);
             _orderController.Initialize(levelData);
 
-            var state = _sessionProfile.MergesState ?? new MergesState(levelData);
-            _mergesGame.Initialize(state, levelData);
-            _sessionController.Initialize();
+            StartLevel(levelData);
+        }
+
+        private void StartLevel(LevelData levelData)
+        {
+            if (_sessionProfile.MergesState == null)
+            {
+                _mergesGame.Initialize(new MergesState(levelData), levelData);
+            }
+            else
+            {
+                _mergesGame.InitializeContinue(_sessionProfile.MergesState, levelData);
+            }
         }
 
         private void CalculateGridPositions(LevelData levelData)
@@ -78,7 +90,6 @@ namespace Project.Gameplay
 
         public void DisposeLevel()
         {
-            _sessionController.Dispose();
             _mergesBoard.Dispose();
             _cellsContainer.Clear();
         }

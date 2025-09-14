@@ -20,9 +20,9 @@ namespace Project.Gameplay
 
         private void SpawnCells()
         {
-            foreach (var coord in Step.Final.GetPlayableCoords())
+            foreach (var coord in _cellsStep.Final.GetPlayableCoords())
             {
-                if (!Step.Final[coord].IsRegular)
+                if (!_cellsStep.Final[coord].IsRegular)
                 {
                     continue;
                 }
@@ -31,6 +31,6 @@ namespace Project.Gameplay
             }
         }
 
-        private void SpawnCell((int X, int Y) coord) => CellsContainer.Spawn(Step.Final[coord], coord);
+        private void SpawnCell((int X, int Y) coord) => CellsContainer.Spawn(_cellsStep.Final[coord], coord);
     }
 }

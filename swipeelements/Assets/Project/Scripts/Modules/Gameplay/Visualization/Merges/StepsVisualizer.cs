@@ -9,22 +9,24 @@ namespace Project.Gameplay
     public class StepsVisualizer
     {
         private readonly CellsMovingSystem _cellsMovingSystem;
+        private readonly DestroyCellsSystem _destroyCellsSystem;
         private readonly ILevelResultHandler _levelResultHandler;
 
         public CellsContainer CellsContainer { get; }
 
         private int _activeVisualizations;
         public bool IsVisualizing => _activeVisualizations > 0;
-        public event Action OnVisualizationFinished;
 
         [Inject]
         private StepsVisualizer(
             CellsContainer cellsContainer,
             CellsMovingSystem cellsMovingSystem,
+            DestroyCellsSystem destroyCellsSystem,
             ILevelResultHandler levelResultHandler)
         {
             CellsContainer = cellsContainer;
             _cellsMovingSystem = cellsMovingSystem;
+            _destroyCellsSystem = destroyCellsSystem;
             _levelResultHandler = levelResultHandler;
         }
 
@@ -38,10 +40,6 @@ namespace Project.Gameplay
             finally
             {
                 Interlocked.Decrement(ref _activeVisualizations);
-                if (!IsVisualizing)
-                {
-                    OnVisualizationFinished?.Invoke();
-                }
             }
         }
 
@@ -52,8 +50,8 @@ namespace Project.Gameplay
                 InitializeGridStep step => InitializeGridAsync(step, cancellationToken),
                 SwitchCellsStep step => SwitchCellStepAsync(step, cancellationToken),
                 MoveCellStep step => MoveCellStepAsync(step, cancellationToken),
-                BoardDestroyStep step => BoardDestroyStepAsync(step, cancellationToken),
-                BoardGravityStep step => BoardGravityStepAsync(step, cancellationToken),
+                DestroyCellsStep step => BoardDestroyStepAsync(step, cancellationToken),
+                FallingCellsStep step => BoardGravityStepAsync(step, cancellationToken),
                 WinGameStep step => WinGameStepAsync(step, cancellationToken),
                 _ => throw new Exception($"Can't find visualizer for {iteration.GetType().Name}")
             };
@@ -84,15 +82,15 @@ namespace Project.Gameplay
             await vs.ApplyAsync(cancellationToken);
         }
 
-        private async UniTask BoardDestroyStepAsync(BoardDestroyStep step, CancellationToken cancellationToken)
+        private async UniTask BoardDestroyStepAsync(DestroyCellsStep cellsStep, CancellationToken cancellationToken)
         {
-            var vs = new BoardDestroyVisualizeStep(this, step);
+            var vs = new BoardDestroyVisualizeStep(this, cellsStep, _destroyCellsSystem);
             await vs.ApplyAsync(cancellationToken);
         }
 
-        private async UniTask BoardGravityStepAsync(BoardGravityStep step, CancellationToken cancellationToken)
+        private async UniTask BoardGravityStepAsync(FallingCellsStep step, CancellationToken cancellationToken)
         {
-            var vs = new BoardGravityVisualizeStep(this, step, _cellsMovingSystem);
+            var vs = new FallingCellsVisualizeStep(this, step, _cellsMovingSystem);
             await vs.ApplyAsync(cancellationToken);
         }
 

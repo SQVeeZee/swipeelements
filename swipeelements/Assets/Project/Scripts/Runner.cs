@@ -26,7 +26,7 @@ public class Runner : MonoBehaviour
     private async UniTask InitializeServices(CancellationToken cancellationToken)
     {
         _services = _sceneContext.Container.ResolveAll<IService>();
-        await UniTask.WhenAll(_services.Select(i => i.InitializeAsync(cancellationToken))).AttachExternalCancellation(cancellationToken);
+        await UniTask.WhenAll(_services.Select(i => i.InitializeServiceAsync(cancellationToken))).AttachExternalCancellation(cancellationToken);
     }
 
     private async UniTask ModulesInitialization(CancellationToken cancellationToken)

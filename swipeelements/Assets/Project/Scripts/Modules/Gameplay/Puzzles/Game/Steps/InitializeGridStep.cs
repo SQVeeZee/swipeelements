@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Project.Core.Utility;
 
 namespace Project.Gameplay.Puzzles
 {
@@ -8,8 +7,6 @@ namespace Project.Gameplay.Puzzles
         public ILevelData Level;
         public override bool MakeSense => Level != null;
         public HashSet<(int x, int y)> Spawned { get; set; }
-
-        public bool IsInitialize { get; set; }
 
         public InitializeGridStep(MergesState initial) : base(initial) { }
 
@@ -22,15 +19,20 @@ namespace Project.Gameplay.Puzzles
             };
 
             FillGrid(step);
-            step.IsInitialize = true;
-
             return step;
         }
 
         private static void FillGrid(InitializeGridStep step)
         {
             var coords = step.Final.GetPlayableCoords();
-            step.Spawned.AddRange(coords);
+            foreach (var coord in coords)
+            {
+                var cell = step.Final[coord];
+                var cellType = cell.CellType;
+                var cellState = cellType.IsTile() ? CellState.Idle : CellState.None;
+                step.Final[coord] = cell.ChangeCell(cellState);
+                step.Spawned.Add(coord);
+            }
         }
     }
 }

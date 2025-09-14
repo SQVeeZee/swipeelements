@@ -16,6 +16,6 @@ namespace Project.Gameplay
             => _cellsMovingSystem = cellsMovingSystem;
 
         public override async UniTask ApplyAsync(CancellationToken cancellationToken)
-            => await _cellsMovingSystem.SwitchTilesAsync(Step.MoveData, cancellationToken);
+            => await _cellsMovingSystem.SwitchTilesAsync(_cellsStep.MoveData, cancellationToken);
     }
 }

@@ -3,11 +3,12 @@ using Cysharp.Threading.Tasks;
 
 namespace Project.Core
 {
-    public class Service : IService
+    public abstract class Service : IService
     {
-        public virtual UniTask InitializeAsync(CancellationToken cancellationToken)
-        {
-            return default;
-        }
+        UniTask IService.InitializeServiceAsync(CancellationToken cancellationToken) => InitializeAsync(cancellationToken);
+
+        protected abstract UniTask InitializeAsync(CancellationToken cancellationToken);
+
+        public virtual void Dispose() { }
     }
 }

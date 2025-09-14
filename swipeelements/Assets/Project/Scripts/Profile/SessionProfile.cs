@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using Project.Core;
 using Project.Gameplay.Puzzles;
 
-namespace Profile
+namespace Project.Profile
 {
     [UsedImplicitly]
     public class SessionProfile : ProfileSection

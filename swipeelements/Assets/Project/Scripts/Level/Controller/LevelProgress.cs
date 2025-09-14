@@ -1,4 +1,4 @@
-using Profile;
+using Project.Profile;
 using Zenject;
 
 namespace Level

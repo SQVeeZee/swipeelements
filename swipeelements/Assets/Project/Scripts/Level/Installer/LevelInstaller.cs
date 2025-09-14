@@ -33,6 +33,7 @@ namespace Level
         {
             Container.Bind<GamePoolManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<LevelController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LevelInitializer>().AsSingle();
             Container.Bind<LevelProgress>().AsSingle();
             Container.Bind<LevelsConfig>().FromInstance(_levelsConfig).AsSingle();
             Container.BindInterfacesAndSelfTo<BoardSettings>().FromInstance(_boardSettings).AsSingle();
@@ -48,8 +49,10 @@ namespace Level
         {
             Container.Bind<MergesGame>().AsSingle();
             Container.Bind<MergesBoard>().AsSingle();
+            Container.Bind<MergesStepProcessor>().AsSingle();
             Container.Bind<StepsVisualizer>().AsSingle();
-            Container.Bind<BoardLocker>().AsSingle();
+            Container.Bind<VisualizationProgress>().AsSingle();
+            Container.Bind<CellsStateConverter>().AsSingle();
         }
 
         private void BindCells()

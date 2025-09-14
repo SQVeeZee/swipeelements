@@ -1,6 +1,6 @@
-using Profile;
 using Project.Core;
 using Project.Core.Utility;
+using Project.Profile;
 using UnityEngine;
 using Zenject;
 
@@ -15,17 +15,18 @@ namespace Project.Gameplay
 
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<GameplayFlowController>().AsSingle();
-            Container.BindInterfacesAndSelfTo<LevelInitializer>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SessionController>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PuzzleChecker>().AsSingle();
-            Container.BindInterfacesAndSelfTo<VisualizationProgress>().AsSingle();
-
+            BindControllers();
             BindInput();
             BindMoving();
             BindTimer();
             BindProfiles();
             BindCancellationTokens();
+            BindDestroy();
+        }
+
+        private void BindControllers()
+        {
+            Container.BindInterfacesAndSelfTo<GameplayFlowController>().AsSingle();
         }
 
         private void BindInput()
@@ -36,9 +37,17 @@ namespace Project.Gameplay
 
         private void BindMoving()
         {
-            Container.Bind<CellsMovingSystem>().AsSingle();
-            Container.Bind<CellsMovingController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CellsMovingSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CellsMovingController>().AsSingle();
             Container.Bind<CellsMovingConfig>().FromInstance(_cellsMovingConfig).AsSingle();
+
+            Container.Bind<LinearMover>().AsSingle();
+            Container.Bind<FallingMover>().AsSingle();
+        }
+
+        private void BindDestroy()
+        {
+            Container.BindInterfacesAndSelfTo<DestroyCellsSystem>().AsSingle();
         }
 
         private void BindTimer()

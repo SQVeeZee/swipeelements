@@ -10,7 +10,6 @@ namespace Project.Gameplay
         private readonly InputController _inputController;
         private readonly CellsContainer _cellsContainer;
         private readonly MergesGame _mergesGame;
-        private readonly BoardLocker _boardLocker;
         private readonly ICameraView _gameCamera;
 
         private TileCellObject _startTile;
@@ -20,13 +19,11 @@ namespace Project.Gameplay
             InputController inputController,
             CellsContainer cellsContainer,
             MergesGame mergesGame,
-            BoardLocker boardLocker,
             [Inject(Id = CameraIds.GameCamera)] ICameraView gameCamera)
         {
             _inputController = inputController;
             _cellsContainer = cellsContainer;
             _mergesGame = mergesGame;
-            _boardLocker = boardLocker;
             _gameCamera = gameCamera;
         }
 
@@ -51,7 +48,7 @@ namespace Project.Gameplay
             {
                 return;
             }
-            if (!_cellsContainer.TryGetValue(startTile, out var coord) || _boardLocker.Contains(coord))
+            if (!_cellsContainer.TryGetValue(startTile, out _) )
             {
                 return;
             }
@@ -61,11 +58,11 @@ namespace Project.Gameplay
 
         private void OnSwiping(SwipeData swipeData)
         {
-            if (_startTile == null)
+            if (_startTile == null || !_cellsContainer.TryGetValue(_startTile, out var from))
             {
+                _startTile = null;
                 return;
             }
-            var from = _cellsContainer[_startTile];
             var to = swipeData.Direction switch
             {
                 SwipeDirection.Up => from.Top(),
@@ -74,11 +71,7 @@ namespace Project.Gameplay
                 SwipeDirection.Right => from.Right(),
                 _ => throw new ArgumentOutOfRangeException(nameof(swipeData.Direction), swipeData.Direction, null)
             };
-            if (!_boardLocker.ContainsAny(from, to))
-            {
-                var lockedCoords = _boardLocker.GetAllLockedCoords();
-                _mergesGame.ApplySwipe(from, to, lockedCoords);
-            }
+            _mergesGame.ApplySwipe(from, to);
             _startTile = null;
         }
 

@@ -13,7 +13,10 @@ namespace Project.Gameplay
         public TileAnimatorProcessor AnimatorProcessor => _animatorProcessor;
 
         public override async UniTask DestroyCellAsync(CancellationToken cancellationToken)
-            => await _animatorProcessor.PlayDestroyAsync(cancellationToken);
+        {
+            Info.ChangeCell(CellState.Destroyed);
+            await _animatorProcessor.PlayDestroyAsync(cancellationToken);
+        }
 
         public override void Initialize(MergesCell info)
         {

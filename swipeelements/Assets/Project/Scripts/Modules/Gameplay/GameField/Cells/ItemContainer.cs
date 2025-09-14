@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Project.Core.Utility;
@@ -102,9 +101,6 @@ namespace Project.Gameplay
             CoordToCell[to] = cell1;
             return cell1;
         }
-
-
-        public List<TileCellObject> GetAllTiles() => CoordToCell.Values.OfType<TileCellObject>().ToList();
 
         public IEnumerator<TCellObject> GetEnumerator() => CellToCoord.Keys.GetEnumerator();
 

@@ -1,8 +1,8 @@
 using System;
 using Level.Utility;
-using Profile;
 using Project.Gameplay;
 using Project.Gameplay.Puzzles;
+using Project.Profile;
 using Zenject;
 
 namespace Level

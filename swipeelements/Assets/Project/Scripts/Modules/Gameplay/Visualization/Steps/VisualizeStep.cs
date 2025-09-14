@@ -7,14 +7,14 @@ namespace Project.Gameplay
     public abstract class VisualizeStep<T>
         where T : MergesStep
     {
-        protected readonly T Step;
+        protected readonly T _cellsStep;
 
         protected readonly StepsVisualizer Visualizer;
         protected CellsContainer CellsContainer { get; private set; }
 
-        protected VisualizeStep(StepsVisualizer visualizer, T step)
+        protected VisualizeStep(StepsVisualizer visualizer, T cellsStep)
         {
-            Step = step;
+            _cellsStep = cellsStep;
             Visualizer = visualizer;
 
             CellsContainer = Visualizer.CellsContainer;

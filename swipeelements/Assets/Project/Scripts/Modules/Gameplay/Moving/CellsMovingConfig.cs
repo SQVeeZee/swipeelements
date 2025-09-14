@@ -6,11 +6,18 @@ namespace Project.Gameplay
     public class CellsMovingConfig : ScriptableObject
     {
         [SerializeField]
-        private float _tileMoveDuration = 0.25f;
+        private MoveSettings _falling;
         [SerializeField]
-        private AnimationCurve _moveCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        private MoveSettings _switching;
+        [SerializeField]
+        private MoveSettings _moving;
 
-        public float TileMoveDuration => _tileMoveDuration;
-        public AnimationCurve MoveCurve => _moveCurve;
+        public MoveSettings GetSettings(CellMoveType type) => type switch
+        {
+            CellMoveType.Falling => _falling,
+            CellMoveType.Switching => _switching,
+            CellMoveType.Moving => _moving,
+            _ => _moving
+        };
     }
 }

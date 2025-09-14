@@ -1,7 +1,7 @@
 using System;
 using Project.Core;
 
-namespace Profile
+namespace Project.Profile
 {
     [Serializable]
     public class GeneralProfile : ProfileSection
