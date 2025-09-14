@@ -8,8 +8,7 @@ namespace Project.Gameplay
     public class TileAnimatorProcessor : MonoBehaviour
     {
         private static readonly int _idle = Animator.StringToHash("idle");
-        private static readonly int _destroy = Animator.StringToHash("destroy");
-
+        private const string DestroyState = "destroy";
         private const string DestroyOverride = "tile_destroy";
 
         [SerializeField]
@@ -24,14 +23,13 @@ namespace Project.Gameplay
         public void Dispose()
         {
             _animator.ResetTrigger(_idle);
-            _animator.ResetTrigger(_destroy);
         }
 
         public void PlayIdle() => _animator.SetTrigger(_idle);
 
         public async UniTask PlayDestroyAsync(CancellationToken cancellationToken)
         {
-            _animator.SetTrigger(_destroy);
+            _animator.Play(DestroyState);
 
             var controller = _animator.runtimeAnimatorController as AnimatorOverrideController;
             if (controller == null)

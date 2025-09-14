@@ -28,7 +28,15 @@ namespace Project.Gameplay
 
         protected override async UniTask DestroyRemoveAsync((int X, int Y) coord, CellObject item, CancellationToken cancellationToken)
         {
-            await item.DestroyCellAsync(cancellationToken);
+            try
+            {
+                await item.DestroyCellAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                ReturnItem(item);
+                throw;
+            }
             ReturnItem(item);
         }
 
