@@ -12,9 +12,9 @@ namespace Project
         {
             SignalBusInstaller.Install(Container);
 
-            Container.DeclareSignal<ApplicationQuitSignal>();
-            Container.DeclareSignal<ApplicationPauseSignal>();
-            Container.DeclareSignal<ApplicationFocusSignal>();
+            Container.DeclareSignal<ApplicationQuitSignal>().OptionalSubscriber();
+            Container.DeclareSignal<ApplicationPauseSignal>().OptionalSubscriber();
+            Container.DeclareSignal<ApplicationFocusSignal>().OptionalSubscriber();
 
             Container.InstantiatePrefabForComponent<ApplicationEvents>(_applicationEvents);
         }
