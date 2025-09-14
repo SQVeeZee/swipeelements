@@ -5,11 +5,11 @@ namespace Project.Gameplay.Puzzles
     [UsedImplicitly]
     public class MergesStepProcessor
     {
-        public StepData Initialize(MergesState state, ILevelData levelData)
+        public StepData Initialize(MergesState state)
         {
             MergesStep.ResetCounters();
-            var step = InitializeGridStep.CalculateStep(state, levelData);
-            return new StepData(step, MergesAction.Recordable);
+            var step = InitializeGridStep.CalculateStep(state);
+            return new StepData(step, MergesAction.None);
         }
 
         public StepData ApplySwipe(MergesState state, (int X, int Y) from, (int X, int Y) to)

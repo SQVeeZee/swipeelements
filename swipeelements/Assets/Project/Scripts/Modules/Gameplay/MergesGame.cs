@@ -12,6 +12,10 @@ namespace Project.Gameplay.Puzzles
         private readonly CellsStateConverter _cellsStateConverter;
         private readonly MergesStepProcessor _stepProcessor;
 
+        private MergesState _initialState;
+
+        private MergesState CurrentState => _sessionProfile.MergesState ?? _initialState;
+
         public event Action<MergesStep> OnStepApply;
 
         [Inject]
@@ -25,17 +29,17 @@ namespace Project.Gameplay.Puzzles
             _stepProcessor = stepProcessor;
         }
 
-        public void Initialize(MergesState mergesState, ILevelData levelData)
+        public void Initialize(MergesState mergesState)
         {
-            var data = _stepProcessor.Initialize(mergesState, levelData);
+            var data = _stepProcessor.Initialize(mergesState);
+            _initialState = data.Step.Final;
             TryApplyStep(data);
         }
 
-        public void InitializeContinue(MergesState mergesState, ILevelData levelData)
+        public void InitializeContinue(MergesState mergesState)
         {
-            Initialize(mergesState, levelData);
-            var state = _cellsStateConverter.ToState(_sessionProfile.MergesState);
-            ResolveNormalizeDestroy(state);
+            Initialize(mergesState);
+            ResolveNormalizeDestroy(_initialState);
         }
 
         public void RunNextStepIfNeeded(MergesStep mergesStep)
@@ -44,7 +48,7 @@ namespace Project.Gameplay.Puzzles
             {
                 return;
             }
-            var state = _cellsStateConverter.ToState(_sessionProfile.MergesState);
+            var state = _cellsStateConverter.ToState(mergesStep.Final);
             if (TryWinGame(state))
             {
                 return;
@@ -66,7 +70,7 @@ namespace Project.Gameplay.Puzzles
 
         public void ApplySwipe((int X, int Y) from, (int X, int Y) to)
         {
-            var state = _cellsStateConverter.ToState(_sessionProfile.MergesState);
+            var state = _cellsStateConverter.ToState(CurrentState);
             var step = _stepProcessor.ApplySwipe(state, from, to);
             TryApplyStep(step);
         }

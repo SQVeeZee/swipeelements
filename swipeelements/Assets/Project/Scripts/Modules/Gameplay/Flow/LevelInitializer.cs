@@ -68,11 +68,11 @@ namespace Project.Gameplay
         {
             if (_sessionProfile.MergesState == null)
             {
-                _mergesGame.Initialize(new MergesState(levelData), levelData);
+                _mergesGame.Initialize(new MergesState(levelData));
             }
             else
             {
-                _mergesGame.InitializeContinue(_sessionProfile.MergesState, levelData);
+                _mergesGame.InitializeContinue(_sessionProfile.MergesState);
             }
         }
 
