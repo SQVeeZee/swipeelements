@@ -11,14 +11,14 @@ using Zenject;
 namespace Project.Gameplay
 {
     [UsedImplicitly]
-    public class GameplayFlowController : IInitializableModuleAsync, IDisposable
+    public class GameplayFlowController : ISceneModule
     {
         private readonly LevelController _levelController;
         private readonly LevelInitializer _levelInitializer;
         private readonly SessionProfile _sessionProfile;
         private readonly VisualizationProgress _visualizationProgress;
         private readonly ICancellationTokenControl _levelCancellationTokenControl;
-        private readonly ICancellationToken _appCancellationToken;
+        private readonly ICancellationToken _moduleCancellationToken;
         private readonly List<ISystemClear> _systemClears;
 
         public GameplayFlowController(
@@ -27,7 +27,7 @@ namespace Project.Gameplay
             SessionProfile sessionProfile,
             VisualizationProgress visualizationProgress,
             [Inject(Id = LevelCancellationToken.Id)] ICancellationTokenControl levelCancellationTokenControl,
-            [Inject(Id = AppCancellationToken.Id)] ICancellationToken appCancellationToken,
+            [Inject(Id = ModuleCancellationToken.Id)] ICancellationToken moduleCancellationToken,
             List<ISystemClear> systemClears)
         {
             _levelController = levelController;
@@ -35,19 +35,19 @@ namespace Project.Gameplay
             _sessionProfile = sessionProfile;
             _visualizationProgress = visualizationProgress;
             _levelCancellationTokenControl = levelCancellationTokenControl;
-            _appCancellationToken = appCancellationToken;
+            _moduleCancellationToken = moduleCancellationToken;
             _systemClears = systemClears;
         }
 
-        UniTask IInitializableModuleAsync.InitializeAsync(CancellationToken cancellationToken)
+        UniTask ISceneModule.InitializeAsync(CancellationToken cancellationToken)
         {
             _levelController.OnLevelFinished += HandleLevelResult;
             _levelInitializer.Initialize();
             StartNewSession();
-            return default;
+            return UniTask.CompletedTask;
         }
 
-        void IDisposable.Dispose()
+        void ISceneModule.Dispose()
         {
             _levelInitializer.Terminate();
             _systemClears.ForEach(system => system.Terminate());
@@ -67,13 +67,13 @@ namespace Project.Gameplay
             {
                 case LevelResult.Success:
                     DisposeLevel();
-                    WaitForVisualizationAndStart(_appCancellationToken.Token).Forget();
+                    WaitForVisualizationAndStart(_moduleCancellationToken.Token).Forget();
                     break;
                 case LevelResult.Skip:
                 case LevelResult.Restart:
                     CleanProfile();
                     DisposeLevel();
-                    WaitForVisualizationAndStart(_appCancellationToken.Token).Forget();
+                    WaitForVisualizationAndStart(_moduleCancellationToken.Token).Forget();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(result), result, null);

@@ -3,8 +3,9 @@ using Cysharp.Threading.Tasks;
 
 namespace Project.Core
 {
-    public interface IInitializableModuleAsync
+    public interface ISceneModule
     {
         UniTask InitializeAsync(CancellationToken cancellationToken);
+        void Dispose();
     }
 }

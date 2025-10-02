@@ -13,7 +13,7 @@ namespace Project.Gameplay
         private readonly StepsVisualizer _stepsVisualizer;
         private readonly VisualizationProgress _visualizationProgress;
         private readonly ICancellationToken _levelCancellationToken;
-        private readonly ICancellationToken _appCancellationToken;
+        private readonly ICancellationToken _moduleCancellationToken;
         private CancellationTokenSource _cancellationToken;
 
         [Inject]
@@ -22,18 +22,18 @@ namespace Project.Gameplay
             StepsVisualizer stepsVisualizer,
             VisualizationProgress visualizationProgress,
             [Inject(Id = LevelCancellationToken.Id)] ICancellationToken levelCancellationToken,
-            [Inject(Id = AppCancellationToken.Id)] ICancellationToken appCancellationToken)
+            [Inject(Id = ModuleCancellationToken.Id)] ICancellationToken moduleCancellationToken)
         {
             _mergesGame = mergesGame;
             _stepsVisualizer = stepsVisualizer;
             _visualizationProgress = visualizationProgress;
             _levelCancellationToken = levelCancellationToken;
-            _appCancellationToken = appCancellationToken;
+            _moduleCancellationToken = moduleCancellationToken;
         }
 
         public void Initialize()
         {
-            _cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(_appCancellationToken.Token, _levelCancellationToken.Token);
+            _cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(_moduleCancellationToken.Token, _levelCancellationToken.Token);
             _mergesGame.OnStepApply += OnGameChanged;
         }
 
