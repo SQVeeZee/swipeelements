@@ -1,11 +1,14 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Project.Core;
 using Project.Gameplay.Puzzles;
 using UnityEngine;
 using Zenject;
 
 namespace Project.Gameplay
 {
-    public class GameplayInputHandler : IInitializable, IDisposable
+    public class GameplayInputHandler : ISceneModule
     {
         private readonly InputController _inputController;
         private readonly CellsContainer _cellsContainer;
@@ -27,13 +30,14 @@ namespace Project.Gameplay
             _gameCamera = gameCamera;
         }
 
-        void IInitializable.Initialize()
+        UniTask ISceneModule.InitializeAsync(CancellationToken cancellationToken)
         {
             _inputController.OnMouseButtonDown += MouseButtonDownHandler;
             _inputController.OnSwiping += SwipingHandler;
+            return default;
         }
 
-        void IDisposable.Dispose()
+        void ISceneModule.Dispose()
         {
             _inputController.OnMouseButtonUp -= MouseButtonDownHandler;
             _inputController.OnSwiping -= SwipingHandler;

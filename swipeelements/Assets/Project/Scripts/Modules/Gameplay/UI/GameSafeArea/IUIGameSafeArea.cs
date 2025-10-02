@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UI
+namespace Project.Gameplay
 {
     public interface IUIGameSafeArea
     {

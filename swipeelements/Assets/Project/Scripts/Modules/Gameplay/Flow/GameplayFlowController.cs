@@ -11,7 +11,7 @@ using Zenject;
 namespace Project.Gameplay
 {
     [UsedImplicitly]
-    public class GameplayFlowController : IInitializableModuleAsync, IDisposable
+    public class GameplayFlowController : ISceneModule
     {
         private readonly LevelController _levelController;
         private readonly LevelInitializer _levelInitializer;
@@ -39,7 +39,7 @@ namespace Project.Gameplay
             _systemClears = systemClears;
         }
 
-        UniTask IInitializableModuleAsync.InitializeAsync(CancellationToken cancellationToken)
+        UniTask ISceneModule.InitializeAsync(CancellationToken cancellationToken)
         {
             _levelController.OnLevelFinished += HandleLevelResult;
             _levelInitializer.Initialize();
@@ -47,7 +47,7 @@ namespace Project.Gameplay
             return default;
         }
 
-        void IDisposable.Dispose()
+        void ISceneModule.Dispose()
         {
             _levelInitializer.Terminate();
             _systemClears.ForEach(system => system.Terminate());

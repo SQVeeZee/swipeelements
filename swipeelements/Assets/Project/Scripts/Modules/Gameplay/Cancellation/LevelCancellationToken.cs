@@ -1,7 +1,8 @@
 using System.Threading;
 using JetBrains.Annotations;
+using Project.Core;
 
-namespace Project.Core
+namespace Project.Gameplay
 {
     [UsedImplicitly]
     public class LevelCancellationToken : BaseCancellationToken, ICancellationTokenControl

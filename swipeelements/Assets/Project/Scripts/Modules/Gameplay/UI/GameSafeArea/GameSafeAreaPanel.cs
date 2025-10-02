@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace UI
+namespace Project.Gameplay
 {
-    public class UIGameSafeAreaPanel : MonoBehaviour, IUIGameSafeArea
+    public class GameSafeAreaPanel : MonoBehaviour, IUIGameSafeArea
     {
         [SerializeField]
         private RectTransform _bottomUI;

@@ -1,4 +1,3 @@
-using Project.Core;
 using Project.Core.Utility;
 using Project.Profile;
 using UnityEngine;
@@ -9,7 +8,9 @@ namespace Project.Gameplay
     public class GameplayInstaller : MonoInstaller
     {
         [SerializeField]
-        private Runner _runner;
+        private BackgroundPanel _backgroundPanel;
+        [SerializeField]
+        private GameSafeAreaPanel _safeArea;
 
         public override void InstallBindings()
         {
@@ -33,7 +34,6 @@ namespace Project.Gameplay
 
         private void BindProfiles()
         {
-            Container.BindService<ProfileService>();
             Container.BindProfile<GeneralProfile>();
             Container.BindProfile<SessionProfile>();
         }
@@ -41,8 +41,12 @@ namespace Project.Gameplay
         private void BindCancellationTokens()
         {
             Container.BindSelfRunCancellationToken<LevelCancellationToken>(LevelCancellationToken.Id);
-            var appCancellationToken = new AppCancellationToken(_runner.destroyCancellationToken);
-            Container.BindCancellationToken(appCancellationToken, AppCancellationToken.Id);
+        }
+
+        private void BindPanels()
+        {
+            Container.Bind<BackgroundPanel>().FromInstance(_backgroundPanel).AsSingle();
+            Container.BindInterfacesAndSelfTo<GameSafeAreaPanel>().FromInstance(_safeArea);
         }
     }
 }

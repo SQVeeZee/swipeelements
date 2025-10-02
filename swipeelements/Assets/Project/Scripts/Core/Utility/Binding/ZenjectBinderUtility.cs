@@ -29,5 +29,30 @@ namespace Project.Core.Utility
                 .WithId(id)
                 .FromInstance(cancellationToken)
                 .AsSingle();
+
+        public static bool BindPanel<TScreen>(this DiContainer container, TScreen panel)
+            where TScreen : BasePanelScreen
+        {
+            container.BindPanel(new ScreenLoader<TScreen>(panel));
+            return true;
+        }
+
+        private static void BindPanel<TScreen>(this DiContainer container, IScreenLoader<TScreen> loader, string id)
+            where TScreen : IScreen
+        {
+            container.BindPanel(loader);
+            foreach (var type in loader.GetType().GetInterfaces())
+            {
+                container.Bind(type).WithId(id).FromInstance(loader);
+            }
+        }
+
+        private static IScreenLoader<TScreen> BindPanel<TScreen>(this DiContainer container, IScreenLoader<TScreen> loader)
+            where TScreen : IScreen
+        {
+            container.QueueForInject(loader);
+            container.BindInterfacesTo(loader.GetType()).FromInstance(loader);
+            return loader;
+        }
     }
 }

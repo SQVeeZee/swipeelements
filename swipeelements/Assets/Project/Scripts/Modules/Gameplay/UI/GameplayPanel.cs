@@ -1,9 +1,8 @@
-using Project.Gameplay;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace UI
+namespace Project.Gameplay
 {
     public class GameplayPanel : MonoBehaviour
     {
