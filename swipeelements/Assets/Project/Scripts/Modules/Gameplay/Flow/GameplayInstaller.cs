@@ -18,6 +18,9 @@ namespace Project.Gameplay
             BindInput();
             BindProfiles();
             BindCancellationTokens();
+            BindPanels();
+
+            Container.BindInterfacesAndSelfTo<GameplayRunner>().AsSingle();
         }
 
         private void BindControllers()

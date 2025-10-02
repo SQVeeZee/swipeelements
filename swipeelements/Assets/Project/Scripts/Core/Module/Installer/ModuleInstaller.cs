@@ -21,8 +21,8 @@ namespace Project.Core
         {
             Container.Bind<ModuleToken>().FromInstance(_token).AsSingle();
             Container.Bind<TModuleToken>().FromInstance(_token).AsSingle();
-            var appCancellationToken = new ModuleCancellationToken(_cancellationToken);
-            Container.BindCancellationToken(appCancellationToken, ModuleCancellationToken.Id);
+            var moduleCancellationToken = new ModuleCancellationToken(_cancellationToken);
+            Container.BindCancellationToken(moduleCancellationToken, ModuleCancellationToken.Id);
         }
     }
 

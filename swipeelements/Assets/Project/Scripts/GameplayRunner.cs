@@ -11,19 +11,20 @@ namespace Project
     {
         private DiContainer _container;
         private List<ISceneModule> _modules;
-        private ICancellationToken _appCancellationToken;
+        private ICancellationToken _moduleCancellationToken;
 
         [Inject]
         private void Construct(
             [Inject(Id = ModuleCancellationToken.Id)] ICancellationToken moduleCancellationToken,
             DiContainer container)
         {
+            _moduleCancellationToken = moduleCancellationToken;
             _container = container;
         }
 
         public void RunModule()
         {
-            ModulesInitialization(_appCancellationToken.Token).Forget();
+            ModulesInitialization(_moduleCancellationToken.Token).Forget();
         }
 
         public void Dispose()
@@ -40,6 +41,5 @@ namespace Project
             await UniTask.WhenAll(_modules.Select(m => m.InitializeAsync(token)))
                 .AttachExternalCancellation(token);
         }
-
     }
 }

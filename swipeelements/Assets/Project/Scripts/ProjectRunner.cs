@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Project.Core;
+using Project.Core.Runner;
 using Project.Core.Utility;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -20,7 +21,7 @@ namespace Project
         [Inject]
         private ProjectRunner(
             SceneService sceneService,
-            ILoadingProcessor loadingProcessor,
+            [InjectOptional] ILoadingProcessor loadingProcessor,
             [Inject(Id = AppCancellationToken.Id)] ICancellationToken appCancellationToken)
         {
             _sceneService = sceneService;
@@ -35,7 +36,7 @@ namespace Project
         private async UniTask RunAsync<TModuleToken>(TModuleToken moduleToken, CancellationToken cancellationToken)
             where TModuleToken : ModuleToken
         {
-            await _sceneService.LoadAsync(GameScene, true, cancellationToken, _loadingProcessor);
+            await _sceneService.LoadAsync(GameScene, true, cancellationToken, null);//_loadingProcessor);
             var scene = SceneManager.GetSceneByName(GameScene);
             var component = scene.FindFirstComponentOfType<SceneContext>();
             if (component == null)
@@ -44,6 +45,10 @@ namespace Project
             }
             var installer = new ModuleInstaller<TModuleToken>(moduleToken, cancellationToken);
             component.AddNormalInstaller(installer);
+            component.Run();
+
+            var moduleRunner = component.Container.Resolve<IModuleRunner>();
+            moduleRunner.RunModule();
         }
     }
 }

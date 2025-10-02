@@ -1,9 +1,12 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Project.Core;
 using UnityEngine;
 using Zenject;
 
 namespace Project.Gameplay
 {
-    public class BackgroundPanel : MonoBehaviour
+    public class BackgroundPanel : MonoBehaviour, ISceneModule
     {
         private BackgroundBalloonController _balloonController;
 
@@ -11,10 +14,12 @@ namespace Project.Gameplay
         private void Construct(BackgroundBalloonController balloonController)
             => _balloonController = balloonController;
 
-        private void Start() => Initialize();
-        private void OnDestroy() => Dispose();
+        UniTask ISceneModule.InitializeAsync(CancellationToken cancellationToken)
+        {
+            _balloonController.Initialize();
+            return UniTask.CompletedTask;
+        }
 
-        private void Initialize() => _balloonController.Initialize();
-        private void Dispose() => _balloonController.Dispose();
+        void ISceneModule.Dispose() => _balloonController.Dispose();
     }
 }

@@ -13,7 +13,7 @@ namespace Project.Gameplay
         private readonly BackgroundAnimationHandler _animationHandler;
         private readonly BackgroundConfig _backgroundConfig;
         private readonly ICanvasItem _canvasItem;
-        private readonly ICancellationToken _appCancellationToken;
+        private readonly ICancellationToken _moduleCancellationToken;
         private readonly BalloonSinusAnimation _animationImplementation = new ();
 
         private CancellationTokenSource _cancellationTokenSource;
@@ -25,14 +25,14 @@ namespace Project.Gameplay
             BackgroundAnimationHandler animationHandler,
             BackgroundConfig backgroundConfig,
             [Inject(Id = CanvasIds.Background)] ICanvasItem canvasItem,
-            [Inject(Id = AppCancellationToken.Id)] ICancellationToken appCancellationToken)
+            [Inject(Id = ModuleCancellationToken.Id)] ICancellationToken moduleCancellationToken)
         {
             _backgroundTimerHandler = backgroundTimerHandler;
             _balloonsContainer = balloonsContainer;
             _animationHandler = animationHandler;
             _backgroundConfig = backgroundConfig;
             _canvasItem = canvasItem;
-            _appCancellationToken = appCancellationToken;
+            _moduleCancellationToken = moduleCancellationToken;
         }
 
         public void Initialize()
@@ -41,7 +41,7 @@ namespace Project.Gameplay
             _balloonsContainer.Initialize();
             _backgroundTimerHandler.Initialize();
             InitializeAnimationHandler();
-            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_appCancellationToken.Token);
+            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_moduleCancellationToken.Token);
         }
 
         private void InitializeAnimationHandler()

@@ -23,7 +23,7 @@ namespace Project.FPS
             BindApplicationEvents();
             BindBootstrapper();
             BindServices();
-            BindLoading();
+            // BindLoading();
 
             Container.Bind<AppConfig>().FromScriptableObject(_appConfig).AsSingle();
             Container.Bind<ProjectRunner>().AsSingle();
