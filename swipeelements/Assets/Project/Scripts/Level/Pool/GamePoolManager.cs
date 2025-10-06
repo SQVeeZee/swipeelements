@@ -23,23 +23,31 @@ namespace Project.Level
 
         public void BindBoardPools()
         {
-            BindCells();
+            BindCellsPool();
             _cellsFactory.Initialize();
         }
 
-        private void BindCells()
+        private void BindCellsPool()
         {
-            foreach (var settings in _cellsConfig.Settings)
+            for (var i = 0; i < _cellsConfig.Count; i++)
             {
-                var type = settings.CellType;
-                _diContainer.Bind<CellObject>().WithId(type).FromInstance(settings.CellObject);
-                _diContainer.BindMemoryPool<CellObject, CellsPool>()
-                    .WithId(type)
-                    .WithInitialSize(20)
-                    .FromComponentInNewPrefab(settings.CellObject)
-                    .UnderTransformGroup($"Cells-Pool-{type}")
-                    .NonLazy();
+                if(_cellsConfig.TryGetSettings(i, out var settings))
+                {
+                    BindCellPool(settings);
+                }
             }
+        }
+
+        private void BindCellPool(CellsConfig.CellSettings settings)
+        {
+            var type = settings.CellType;
+            _diContainer.Bind<CellObject>().WithId(type).FromInstance(settings.CellObject);
+            _diContainer.BindMemoryPool<CellObject, CellsPool>()
+                .WithId(type)
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(settings.CellObject)
+                .UnderTransformGroup($"Cells-Pool-{type}")
+                .NonLazy();
         }
     }
 }
