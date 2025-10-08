@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+using Project.Entitas;
 
 namespace Project.Gameplay.Puzzles
 {
     public struct FallingData
     {
         public MoveData MoveData { get; }
-        public HashSet<(int X, int Y)> Path { get; }
+        public HashSet<Coord> Path { get; }
 
-        public FallingData(MoveData moveData, HashSet<(int X, int Y)> path)
+        public FallingData(MoveData moveData, HashSet<Coord> path)
         {
             MoveData = moveData;
             Path = path;

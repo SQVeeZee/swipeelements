@@ -1,3 +1,5 @@
+using Project.Entitas;
+
 namespace Project.Gameplay.Puzzles
 {
     public class SwitchCellsStep : MergesStep
@@ -10,14 +12,14 @@ namespace Project.Gameplay.Puzzles
         {
         }
 
-        public static SwitchCellsStep CalculateStep(MergesState state, (int X, int Y) from, (int X, int Y) to)
+        public static SwitchCellsStep CalculateStep(MergesState state, Coord from, Coord to)
         {
             var step = new SwitchCellsStep(state);
             step.ApplySwitchStep(from, to);
             return step;
         }
 
-        private void ApplySwitchStep((int X, int Y) from, (int X, int Y) to)
+        private void ApplySwitchStep(Coord from, Coord to)
         {
             Final[from] = Initial[to].ChangeCell(CellState.Moving);
             Final[to] = Initial[from].ChangeCell(CellState.Moving);

@@ -5,9 +5,9 @@ using Project.Core;
 using Project.Core.Runner;
 using Zenject;
 
-namespace Project
+namespace Project.Gameplay
 {
-    public sealed class GameplayRunner : IModuleRunner
+    public sealed class GameplayRunner : IModuleRunner, ITickable
     {
         private DiContainer _container;
         private List<ISceneModule> _modules;
@@ -22,12 +22,10 @@ namespace Project
             _container = container;
         }
 
-        public void RunModule()
-        {
-            ModulesInitialization(_moduleCancellationToken.Token).Forget();
-        }
+        void IModuleRunner.RunModule() => ModulesInitialization(_moduleCancellationToken.Token).Forget();
+        void ITickable.Tick() => _modules.ForEach(module => module.Tick());
 
-        public void Dispose()
+        void IModuleRunner.Dispose()
         {
             foreach (var module in _modules)
             {

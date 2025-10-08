@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Project.Entitas;
 using Project.Gameplay.Puzzles;
 
 namespace Project.Gameplay
@@ -19,7 +20,7 @@ namespace Project.Gameplay
         public override async UniTask ApplyAsync(CancellationToken cancellationToken)
             => await DestroyCellsAsync(_cellsStep.DestroyedCells, cancellationToken);
 
-        private async UniTask DestroyCellsAsync(HashSet<(int X, int Y)> coords, CancellationToken cancellationToken)
+        private async UniTask DestroyCellsAsync(HashSet<Coord> coords, CancellationToken cancellationToken)
         {
             var tasks = new List<UniTask>();
             foreach (var coord in coords)

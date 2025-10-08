@@ -1,11 +1,13 @@
-﻿namespace Project.Gameplay.Puzzles
+﻿using Project.Entitas;
+
+namespace Project.Gameplay.Puzzles
 {
     public readonly struct MoveData
     {
-        public readonly (int X, int Y) From;
-        public readonly (int X, int Y) To;
+        public readonly Coord From;
+        public readonly Coord To;
 
-        public MoveData((int X, int Y) from, (int X, int Y) to)
+        public MoveData(Coord from, Coord to)
         {
             From = from;
             To = to;

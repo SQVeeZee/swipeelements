@@ -1,8 +1,7 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Project.Core;
-using Project.Gameplay.Puzzles;
+using Project.Entitas;
 using UnityEngine;
 using Zenject;
 
@@ -12,8 +11,9 @@ namespace Project.Gameplay
     {
         private readonly InputController _inputController;
         private readonly CellsContainer _cellsContainer;
-        private readonly MergesGame _mergesGame;
         private readonly ICameraView _gameCamera;
+
+        private readonly InputContext _inputContext;
 
         private TileCellObject _startTile;
 
@@ -21,13 +21,13 @@ namespace Project.Gameplay
         private GameplayInputHandler(
             InputController inputController,
             CellsContainer cellsContainer,
-            MergesGame mergesGame,
             [Inject(Id = CameraIds.GameCamera)] ICameraView gameCamera)
         {
             _inputController = inputController;
             _cellsContainer = cellsContainer;
-            _mergesGame = mergesGame;
             _gameCamera = gameCamera;
+
+            _inputContext = Contexts.sharedInstance.input;
         }
 
         UniTask ISceneModule.InitializeAsync(CancellationToken cancellationToken)
@@ -37,27 +37,26 @@ namespace Project.Gameplay
             return default;
         }
 
-        void ISceneModule.Tick(){}
+        void ISceneModule.Tick() { }
 
         void ISceneModule.Dispose()
         {
-            _inputController.OnMouseButtonUp -= MouseButtonDownHandler;
+            _inputController.OnMouseButtonDown -= MouseButtonDownHandler;
             _inputController.OnSwiping -= SwipingHandler;
         }
 
         private void MouseButtonDownHandler(Vector2 position) => OnMouseButtonDown(position);
         private void SwipingHandler(SwipeData swipeData) => OnSwiping(swipeData);
 
-        private void OnMouseButtonDown(Vector2 vector2)
+        private void OnMouseButtonDown(Vector2 screenPos)
         {
-            if (!TryRaycast(vector2, out var startTile) || startTile == null)
-            {
+            _inputContext.CreateEntity().AddPointerDown(screenPos);
+
+            if (!TryRaycast(screenPos, out var startTile) || startTile == null)
                 return;
-            }
-            if (!_cellsContainer.TryGetValue(startTile, out _) )
-            {
+
+            if (!_cellsContainer.TryGetValue(startTile, out _))
                 return;
-            }
 
             _startTile = startTile;
         }
@@ -69,15 +68,8 @@ namespace Project.Gameplay
                 _startTile = null;
                 return;
             }
-            var to = swipeData.Direction switch
-            {
-                SwipeDirection.Up => from.Top(),
-                SwipeDirection.Down => from.Bottom(),
-                SwipeDirection.Left => from.Left(),
-                SwipeDirection.Right => from.Right(),
-                _ => throw new ArgumentOutOfRangeException(nameof(swipeData.Direction), swipeData.Direction, null)
-            };
-            _mergesGame.ApplySwipe(from, to);
+
+            _inputContext.CreateEntity().AddSwipeEvent(new Coord(from.X, from.Y), swipeData.Direction);
             _startTile = null;
         }
 

@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using Project.Core.Utility;
+using Project.Entitas;
 using Project.Gameplay.Puzzles;
 
 namespace Project.Gameplay
 {
     public class MovingCellsContainer
     {
-        private readonly HashSet<(int X, int Y)> _movingCells = new();
-        private readonly HashSet<(int X, int Y)> _fallingCells = new();
+        private readonly HashSet<Coord> _movingCells = new();
+        private readonly HashSet<Coord> _fallingCells = new();
 
         public void Clear()
         {
@@ -26,7 +27,7 @@ namespace Project.Gameplay
             _movingCells.Remove(data.To);
         }
 
-        public bool IsMoving((int X, int Y) coord) => _movingCells.Contains(coord);
+        public bool IsMoving(Coord coord) => _movingCells.Contains(coord);
 
         public void AddFalling(FallingData data)
         {
@@ -40,7 +41,7 @@ namespace Project.Gameplay
             data.Path.ForEach(coord => _fallingCells.Remove(coord));
         }
 
-        public bool IsFalling((int X, int Y) coord)
+        public bool IsFalling(Coord coord)
             => _fallingCells.Contains(coord);
     }
 }

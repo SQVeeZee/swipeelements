@@ -1,5 +1,6 @@
 using System;
 using JetBrains.Annotations;
+using Project.Entitas;
 using Project.Gameplay.Puzzles;
 using Project.Profile;
 using Zenject;
@@ -69,7 +70,7 @@ namespace Project.Gameplay
             }
         }
 
-        public void ApplySwipe((int X, int Y) from, (int X, int Y) to)
+        public void ApplySwipe(Coord from, Coord to)
         {
             var state = _cellsStateConverter.ToState(CurrentState);
             var step = _stepProcessor.ApplySwipe(state, from, to);

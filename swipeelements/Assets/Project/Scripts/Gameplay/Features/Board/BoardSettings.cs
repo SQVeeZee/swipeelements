@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Project.Entitas;
 using UnityEngine;
 
 namespace Project.Gameplay
@@ -9,13 +10,13 @@ namespace Project.Gameplay
         [SerializeField]
         private Transform _cellsRoot;
 
-        private Dictionary<(int X, int Y), Vector3> _positions;
+        private Dictionary<Coord, Vector3> _positions;
 
         public Transform CellsRoot => _cellsRoot;
 
-        public void Initialize(Dictionary<(int X, int Y), Vector3> positions) => _positions = positions;
+        public void Initialize(Dictionary<Coord, Vector3> positions) => _positions = positions;
 
-        public Vector3 GetCellPosition((int X, int Y) coord)
+        public Vector3 GetCellPosition(Coord coord)
         {
             if (_positions.TryGetValue(coord, out var position))
             {

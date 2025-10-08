@@ -9,17 +9,38 @@
 public static class GameComponentsLookup {
 
     public const int Cell = 0;
-    public const int Tile = 1;
+    public const int Coord = 1;
+    public const int Destroyed = 2;
+    public const int Move = 3;
+    public const int MoveRequest = 4;
+    public const int MoveValidate = 5;
+    public const int Spawn = 6;
+    public const int SwitchRequest = 7;
+    public const int Tile = 8;
 
-    public const int TotalComponents = 2;
+    public const int TotalComponents = 9;
 
     public static readonly string[] componentNames = {
         "Cell",
+        "Coord",
+        "Destroyed",
+        "Move",
+        "MoveRequest",
+        "MoveValidate",
+        "Spawn",
+        "SwitchRequest",
         "Tile"
     };
 
     public static readonly System.Type[] componentTypes = {
         typeof(Project.Entitas.CellComponent),
+        typeof(Project.Entitas.CoordComponent),
+        typeof(Project.Entitas.DestroyedComponent),
+        typeof(Project.Entitas.MoveComponent),
+        typeof(Project.Entitas.MoveRequestComponent),
+        typeof(Project.Entitas.MoveValidateComponent),
+        typeof(Project.Entitas.SpawnComponent),
+        typeof(Project.Entitas.SwitchRequestComponent),
         typeof(Project.Entitas.TileComponent)
     };
 }

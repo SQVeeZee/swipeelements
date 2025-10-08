@@ -1,3 +1,4 @@
+using Project.Entitas;
 using Project.Gameplay.Puzzles;
 using Zenject;
 
@@ -27,7 +28,7 @@ namespace Project.Gameplay
             {
                 for (var x = 0; x < mergesState.Columns; x++)
                 {
-                    var coord = (x, y);
+                    var coord = new Coord(x, y);
                     var cellState = GetCellState(coord);
                     if (_cellsContainer.TryGetValue(coord, out var cellObj))
                     {
@@ -43,7 +44,7 @@ namespace Project.Gameplay
             return state;
         }
 
-        private CellState GetCellState((int X, int Y) coord)
+        private CellState GetCellState(Coord coord)
         {
             if (_destroyCellsSystem.DestroyedCells.Contains(coord))
             {

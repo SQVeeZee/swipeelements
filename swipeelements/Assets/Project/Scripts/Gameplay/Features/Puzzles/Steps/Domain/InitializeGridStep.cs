@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using Project.Entitas;
 
 namespace Project.Gameplay.Puzzles
 {
     public class InitializeGridStep : MergesStep
     {
         public override bool MakeSense => Spawned.Count > 0;
-        public HashSet<(int x, int y)> Spawned { get; set; }
+        public HashSet<Coord> Spawned { get; set; }
 
         public InitializeGridStep(MergesState initial) : base(initial) { }
 
@@ -13,7 +14,7 @@ namespace Project.Gameplay.Puzzles
         {
             var step = new InitializeGridStep(state)
             {
-                Spawned = new HashSet<(int x, int y)>()
+                Spawned = new HashSet<Coord>()
             };
 
             FillGrid(step);

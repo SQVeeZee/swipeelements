@@ -11,19 +11,19 @@ public partial class GameEntity {
     public Project.Entitas.CellComponent cell { get { return (Project.Entitas.CellComponent)GetComponent(GameComponentsLookup.Cell); } }
     public bool hasCell { get { return HasComponent(GameComponentsLookup.Cell); } }
 
-    public void AddCell(Project.Gameplay.Puzzles.CellType newCellType, (int X, int Y) newCoord) {
+    public void AddCell(Project.Gameplay.Puzzles.CellType newCellType, Project.Gameplay.Puzzles.CellState newCellState) {
         var index = GameComponentsLookup.Cell;
         var component = (Project.Entitas.CellComponent)CreateComponent(index, typeof(Project.Entitas.CellComponent));
-        component.CellType = newCellType;
-        component.Coord = newCoord;
+        component.cellType = newCellType;
+        component.cellState = newCellState;
         AddComponent(index, component);
     }
 
-    public void ReplaceCell(Project.Gameplay.Puzzles.CellType newCellType, (int X, int Y) newCoord) {
+    public void ReplaceCell(Project.Gameplay.Puzzles.CellType newCellType, Project.Gameplay.Puzzles.CellState newCellState) {
         var index = GameComponentsLookup.Cell;
         var component = (Project.Entitas.CellComponent)CreateComponent(index, typeof(Project.Entitas.CellComponent));
-        component.CellType = newCellType;
-        component.Coord = newCoord;
+        component.cellType = newCellType;
+        component.cellState = newCellState;
         ReplaceComponent(index, component);
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Entitas;
 using UnityEngine;
 using Zenject;
 
@@ -24,7 +25,7 @@ namespace Project.Gameplay
             _uiCamera = uiCamera;
         }
 
-        public Dictionary<(int X, int Y), Vector3> CalculateGridPositions(int columns, int rows)
+        public Dictionary<Coord, Vector3> CalculateGridPositions(int columns, int rows)
         {
             var cellSize = _gridConfig.CellSize;
             var anchorPosition = GetAnchorPosition();
@@ -57,9 +58,9 @@ namespace Project.Gameplay
             ));
         }
 
-        private static Dictionary<(int X, int Y), Vector3> GenerateGridPositions(int columns, int rows, float cellSize, float anchorY)
+        private static Dictionary<Coord, Vector3> GenerateGridPositions(int columns, int rows, float cellSize, float anchorY)
         {
-            var dict = new Dictionary<(int X, int Y), Vector3>();
+            var dict = new Dictionary<Coord, Vector3>();
 
             var originX = 0f;
             var originY = 0f;
@@ -69,9 +70,10 @@ namespace Project.Gameplay
             {
                 for (var y = 0; y < rows; y++)
                 {
+                    var coord = new Coord(x, y);
                     var posX = originX + xOffset + x * cellSize;
                     var posY = originY + y * cellSize + anchorY;
-                    dict[(x, y)] = new Vector3(posX, posY, 0f);
+                    dict[coord] = new Vector3(posX, posY, 0f);
                 }
             }
 

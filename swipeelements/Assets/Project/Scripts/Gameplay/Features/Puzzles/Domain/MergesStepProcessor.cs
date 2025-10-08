@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Project.Entitas;
 
 namespace Project.Gameplay.Puzzles
 {
@@ -12,7 +13,7 @@ namespace Project.Gameplay.Puzzles
             return new StepData(step, MergesAction.None);
         }
 
-        public StepData ApplySwipe(MergesState state, (int X, int Y) from, (int X, int Y) to)
+        public StepData ApplySwipe(MergesState state, Coord from, Coord to)
         {
             var moveData = new MoveData(from, to);
             var step = TileActionStep.Create(state, moveData);

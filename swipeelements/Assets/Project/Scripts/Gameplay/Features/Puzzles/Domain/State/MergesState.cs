@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project.Entitas;
 
 namespace Project.Gameplay.Puzzles
 {
@@ -16,10 +17,10 @@ namespace Project.Gameplay.Puzzles
             set => _cells[x, y] = value;
         }
 
-        public MergesCell this[(int x, int y) coord]
+        public MergesCell this[Coord coord]
         {
-            get => _cells[coord.x, coord.y];
-            set => _cells[coord.x, coord.y] = value;
+            get => _cells[coord.X, coord.Y];
+            set => _cells[coord.X, coord.Y] = value;
         }
 
         [JsonConstructor] public MergesState() { }

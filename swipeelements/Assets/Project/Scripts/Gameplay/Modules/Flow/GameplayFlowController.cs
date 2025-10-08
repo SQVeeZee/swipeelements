@@ -43,12 +43,18 @@ namespace Project.Gameplay
             _entitasModule = entitasModule;
         }
 
-        protected override async UniTask InitializeAsync(CancellationToken cancellationToken)
+        protected override UniTask InitializeAsync(CancellationToken cancellationToken)
         {
             _levelController.OnLevelFinished += HandleLevelResult;
             _levelInitializer.Initialize();
             StartNewSession();
-            await _entitasModule.InitializeAsync(cancellationToken);
+            _entitasModule.Initialize();
+            return UniTask.CompletedTask;
+        }
+
+        protected override void Tick()
+        {
+            _entitasModule.Tick();
         }
 
         protected override void Dispose()

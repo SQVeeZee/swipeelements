@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Project.Entitas;
 using Zenject;
 
 namespace Project.Gameplay
@@ -9,7 +10,7 @@ namespace Project.Gameplay
     {
         private readonly CellsContainer _cellsContainer;
 
-        public HashSet<(int X, int Y)> DestroyedCells { get; } = new();
+        public HashSet<Coord> DestroyedCells { get; } = new();
 
         [Inject]
         private DestroyCellsSystem(CellsContainer cellsContainer) => _cellsContainer = cellsContainer;
@@ -17,7 +18,7 @@ namespace Project.Gameplay
         void ISystemClear.Clear() => DestroyedCells.Clear();
         void ISystemClear.Terminate() => DestroyedCells.Clear();
 
-        public async UniTask DestroyCellAsync((int X, int Y) coord, CancellationToken cancellationToken)
+        public async UniTask DestroyCellAsync(Coord coord, CancellationToken cancellationToken)
         {
             DestroyedCells.Add(coord);
             await _cellsContainer.DestroyAsync(coord, cancellationToken);

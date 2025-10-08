@@ -1,5 +1,5 @@
-using System.Threading;
-using Cysharp.Threading.Tasks;
+using Entitas;
+using Project.Gameplay;
 using Project.Gameplay.Puzzles;
 using Project.Level;
 using Zenject;
@@ -9,48 +9,44 @@ namespace Project.Entitas
     public sealed class EntitasModule
     {
         private readonly LevelController _levelController;
-        private readonly BoardViewAdapter _boardViewAdapter;
+        private readonly DiContainer _diContainer;
 
-        public Contexts Contexts { get; private set; }
-        public global::Entitas.Systems Systems { get; private set; }
+        private readonly Contexts _contexts;
+
+        private Systems _systems;
 
         [Inject]
         private EntitasModule(
             LevelController levelController,
-            BoardViewAdapter boardViewAdapter)
+            DiContainer diContainer)
         {
             _levelController = levelController;
-            _boardViewAdapter = boardViewAdapter;
+            _diContainer = diContainer;
         }
 
-        public UniTask InitializeAsync(CancellationToken cancellationToken)
+        public void Initialize()
         {
             var levelData = _levelController.GetCurrentLevel();
-            Create(levelData, _boardViewAdapter);
-            return UniTask.CompletedTask;
+            CreateSystems(Contexts.sharedInstance, levelData);
         }
 
-        protected void Dispose()
+        private void CreateSystems(Contexts contexts, LevelData levelData)
         {
-            Systems.TearDown();
-            Systems = null;
-            Contexts = null;
+            _systems = new GameSystems(contexts, _diContainer);
+            contexts.level.SetLevelConfig(levelData);
+            _systems.Initialize();
         }
 
-        protected void Tick()
+        private void Dispose()
         {
-            Systems.Execute();
-            Systems.Cleanup();
+            _systems.TearDown();
+            _systems = null;
         }
 
-        private void Create(LevelData levelData, IBoardView boardView)
+        public void Tick()
         {
-            Contexts = new Contexts();
-            Contexts.level.SetLevelConfig(levelData);
-
-            Systems = new Feature("Root")
-                .Add(new PuzzleFeature(Contexts, boardView));
-            Systems.Initialize();
+            _systems.Execute();
+            _systems.Cleanup();
         }
     }
 }

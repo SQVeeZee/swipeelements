@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public Project.Entitas.TileComponent tile { get { return (Project.Entitas.TileComponent)GetComponent(GameComponentsLookup.Tile); } }
-    public bool hasTile { get { return HasComponent(GameComponentsLookup.Tile); } }
+    static readonly Project.Entitas.TileComponent tileComponent = new Project.Entitas.TileComponent();
 
-    public void AddTile(Project.Gameplay.Puzzles.CellState newCellState) {
-        var index = GameComponentsLookup.Tile;
-        var component = (Project.Entitas.TileComponent)CreateComponent(index, typeof(Project.Entitas.TileComponent));
-        component.CellState = newCellState;
-        AddComponent(index, component);
-    }
+    public bool isTile {
+        get { return HasComponent(GameComponentsLookup.Tile); }
+        set {
+            if (value != isTile) {
+                var index = GameComponentsLookup.Tile;
+                if (value) {
+                    var componentPool = GetComponentPool(index);
+                    var component = componentPool.Count > 0
+                            ? componentPool.Pop()
+                            : tileComponent;
 
-    public void ReplaceTile(Project.Gameplay.Puzzles.CellState newCellState) {
-        var index = GameComponentsLookup.Tile;
-        var component = (Project.Entitas.TileComponent)CreateComponent(index, typeof(Project.Entitas.TileComponent));
-        component.CellState = newCellState;
-        ReplaceComponent(index, component);
-    }
-
-    public void RemoveTile() {
-        RemoveComponent(GameComponentsLookup.Tile);
+                    AddComponent(index, component);
+                } else {
+                    RemoveComponent(index);
+                }
+            }
+        }
     }
 }
 

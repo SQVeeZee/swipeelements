@@ -1,5 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Project.Entitas;
 using Project.Gameplay.Puzzles;
 
 namespace Project.Gameplay
@@ -30,6 +31,6 @@ namespace Project.Gameplay
             }
         }
 
-        private void SpawnCell((int X, int Y) coord) => CellsContainer.Spawn(_cellsStep.Final[coord], coord);
+        private void SpawnCell(Coord coord) => CellsContainer.Spawn(_cellsStep.Final[coord], coord);
     }
 }

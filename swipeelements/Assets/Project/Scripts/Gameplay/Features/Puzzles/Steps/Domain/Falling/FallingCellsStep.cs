@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Entitas;
 
 namespace Project.Gameplay.Puzzles
 {
@@ -28,7 +29,7 @@ namespace Project.Gameplay.Puzzles
 
                 for (var row = 1; row < Final.Rows; row++)
                 {
-                    var fromCoord = (column, row);
+                    var fromCoord = new Coord(column, row);
                     var cell = Final[fromCoord];
 
                     if (cell.IsEmpty)
@@ -44,8 +45,8 @@ namespace Project.Gameplay.Puzzles
                         continue;
                     }
 
-                    var targetCoord = (column, lowestFreeRow);
-                    var fallPath = BuildFallPath(column, targetCoord.lowestFreeRow, row);
+                    var targetCoord = new Coord(column, lowestFreeRow);
+                    var fallPath = BuildFallPath(column, targetCoord.Y, row);
 
                     var move = new MoveData(fromCoord, targetCoord);
                     var fallMove = new FallingData(move, fallPath);
@@ -79,13 +80,14 @@ namespace Project.Gameplay.Puzzles
             return lowestFreeRow;
         }
 
-        private HashSet<(int X, int Y)> BuildFallPath(int column, int startRow, int endRow)
+        private HashSet<Coord> BuildFallPath(int column, int startRow, int endRow)
         {
-            var path = new HashSet<(int X, int Y)>();
+            var path = new HashSet<Coord>();
             for (var row = startRow; row < endRow; row++)
             {
-                path.Add((column, row));
-                Final[(column, row)] = Final[(column, row)].ChangeCell(CellState.Falling);
+                var coord = new Coord(column, row);
+                path.Add(coord);
+                Final[coord] = Final[coord].ChangeCell(CellState.Falling);
             }
             return path;
         }

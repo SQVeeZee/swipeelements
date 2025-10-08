@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using Project.Gameplay.Puzzles;
 using UnityEngine;
 
 namespace Project.Gameplay
@@ -102,7 +103,7 @@ namespace Project.Gameplay
                 return false;
             }
 
-            var belowCoord = (coord.X, coord.Y - 1);
+            var belowCoord = coord.Bottom();
             return _cellsContainer.TryGetValue(belowCoord, out below);
         }
     }

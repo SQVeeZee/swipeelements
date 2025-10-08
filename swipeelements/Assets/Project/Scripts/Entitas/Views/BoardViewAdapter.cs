@@ -1,3 +1,4 @@
+using System.Threading;
 using Project.Gameplay;
 using Project.Gameplay.Puzzles;
 using UnityEngine;
@@ -9,24 +10,32 @@ namespace Project.Entitas
     {
         private readonly CellsContainer _cellsContainer;
         private readonly BoardSettings _boardSettings;
+        private readonly CellsMovingSystem _cellsMovingSystem;
 
         [Inject]
         private BoardViewAdapter(
             CellsContainer cellsContainer,
-            BoardSettings boardSettings)
+            BoardSettings boardSettings,
+            CellsMovingSystem cellsMovingSystem)
         {
             _cellsContainer = cellsContainer;
             _boardSettings = boardSettings;
+            _cellsMovingSystem = cellsMovingSystem;
         }
 
-        public ICellView SpawnTile(CellType type, (int x, int y) coord)
+        public ICellView SpawnTile(CellType type, Coord coord)
         {
             var cellObj = _cellsContainer.Spawn(new MergesCell(type), coord);
             cellObj.transform.position = _boardSettings.GetCellPosition(coord);
             return new TileViewAdapter(_cellsContainer, cellObj);
         }
 
-        public void MoveTile(ICellView view, (int x, int y) coord)
+        public void MoveTile(MoveData moveData)
+        {
+            _cellsMovingSystem.MoveTileAsync(moveData, new CancellationToken());
+        }
+
+        public void MoveTile(ICellView view, Coord coord)
         {
             var v = (TileViewAdapter)view;
             // только вью-телепорт (логика координат уже изменилась в ECS)
