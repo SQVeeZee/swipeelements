@@ -11,17 +11,27 @@ public partial class GameEntity {
     public Project.Entitas.MoveComponent move { get { return (Project.Entitas.MoveComponent)GetComponent(GameComponentsLookup.Move); } }
     public bool hasMove { get { return HasComponent(GameComponentsLookup.Move); } }
 
-    public void AddMove(Project.Gameplay.Puzzles.MoveData newMoveData) {
+    public void AddMove(Project.Gameplay.Puzzles.MoveData newMove, UnityEngine.Vector3 newStart, UnityEngine.Vector3 newEnd, float newElapsed, float newDuration, UnityEngine.AnimationCurve newCurve) {
         var index = GameComponentsLookup.Move;
         var component = (Project.Entitas.MoveComponent)CreateComponent(index, typeof(Project.Entitas.MoveComponent));
-        component.moveData = newMoveData;
+        component.move = newMove;
+        component.start = newStart;
+        component.end = newEnd;
+        component.elapsed = newElapsed;
+        component.duration = newDuration;
+        component.curve = newCurve;
         AddComponent(index, component);
     }
 
-    public void ReplaceMove(Project.Gameplay.Puzzles.MoveData newMoveData) {
+    public void ReplaceMove(Project.Gameplay.Puzzles.MoveData newMove, UnityEngine.Vector3 newStart, UnityEngine.Vector3 newEnd, float newElapsed, float newDuration, UnityEngine.AnimationCurve newCurve) {
         var index = GameComponentsLookup.Move;
         var component = (Project.Entitas.MoveComponent)CreateComponent(index, typeof(Project.Entitas.MoveComponent));
-        component.moveData = newMoveData;
+        component.move = newMove;
+        component.start = newStart;
+        component.end = newEnd;
+        component.elapsed = newElapsed;
+        component.duration = newDuration;
+        component.curve = newCurve;
         ReplaceComponent(index, component);
     }
 

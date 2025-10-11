@@ -23,11 +23,10 @@ namespace Project.Entitas
         {
             foreach (var inputEntity in list)
             {
-                var from = inputEntity.swipeEvent.from;
-                var to = GetSwipeDirection(from, inputEntity.swipeEvent.dir);
-
-                var entity = _gameContext.CreateEntity();
-                entity.AddMoveValidate(new MoveData(from, to));
+                var tileEntity = inputEntity.swipeEvent.tile.Entity;
+                var tileCoord = tileEntity.tileCoord.value;
+                var to = GetSwipeDirection(tileCoord, inputEntity.swipeEvent.dir);
+                tileEntity.AddMoveRequest(new MoveData(tileCoord, to));
             }
         }
 

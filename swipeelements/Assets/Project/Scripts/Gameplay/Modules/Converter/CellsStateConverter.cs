@@ -7,17 +7,14 @@ namespace Project.Gameplay
     public class CellsStateConverter
     {
         private readonly CellsContainer _cellsContainer;
-        private readonly CellsMovingSystem _cellsMovingSystem;
         private readonly DestroyCellsSystem _destroyCellsSystem;
 
         [Inject]
         private CellsStateConverter(
             CellsContainer cellsContainer,
-            CellsMovingSystem cellsMovingSystem,
             DestroyCellsSystem destroyCellsSystem)
         {
             _cellsContainer = cellsContainer;
-            _cellsMovingSystem = cellsMovingSystem;
             _destroyCellsSystem = destroyCellsSystem;
         }
 
@@ -30,14 +27,14 @@ namespace Project.Gameplay
                 {
                     var coord = new Coord(x, y);
                     var cellState = GetCellState(coord);
-                    if (_cellsContainer.TryGetValue(coord, out var cellObj))
-                    {
-                        state[coord] = state[coord].ChangeCell(cellObj.Info.CellType, cellState);
-                    }
-                    else
-                    {
-                        state[coord] = MergesCell.Empty.ChangeCell(cellState);
-                    }
+                    // if (_cellsContainer.TryGetValue(coord, out var cellObj))
+                    // {
+                    //     state[coord] = state[coord].ChangeCell(cellObj.Info.CellType, cellState);
+                    // }
+                    // else
+                    // {
+                    //     state[coord] = MergesCell.Empty.ChangeCell(cellState);
+                    // }
                 }
             }
 
@@ -50,18 +47,18 @@ namespace Project.Gameplay
             {
                 return CellState.Destroyed;
             }
-            if (_cellsMovingSystem.MovingContainer.IsMoving(coord))
-            {
-                return CellState.Moving;
-            }
-            if (_cellsMovingSystem.MovingContainer.IsFalling(coord))
-            {
-                return CellState.Falling;
-            }
-            if (!_cellsContainer.TryGetValue(coord, out var state))
-            {
-                return CellState.None;
-            }
+            // if (_cellsMovingSystem.MovingContainer.IsMoving(coord))
+            // {
+            //     return CellState.Moving;
+            // }
+            // if (_cellsMovingSystem.MovingContainer.IsFalling(coord))
+            // {
+            //     return CellState.Falling;
+            // }
+            // if (!_cellsContainer.TryGetValue(coord, out var state))
+            // {
+                // return CellState.None;
+            // }
             return CellState.Idle;
         }
     }

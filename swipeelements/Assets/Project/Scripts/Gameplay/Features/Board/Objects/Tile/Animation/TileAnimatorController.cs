@@ -34,20 +34,21 @@ namespace Project.Gameplay
 
         private void IdleTimerTickHandler(int fieldPercentage)
         {
-            var tiles = new List<TileCellObject>();
-            foreach (var cell in _cellsContainer)
-            {
-                if (cell is TileCellObject { Info: { CellState: CellState.Idle } } tileCellObject)
-                {
-                    tiles.Add(tileCellObject);
-                }
-            }
-            if (tiles.Count == 0)
-            {
-                return;
-            }
-
-            SelectTilesPlayIdleAnimations(tiles, fieldPercentage);
+            //TODO:
+            // var tiles = new List<TileCellObject>();
+            // foreach (var cell in _cellsContainer)
+            // {
+            //     if (cell is TileCellObject { Info: { CellState: CellState.Idle } } tileCellObject)
+            //     {
+            //         tiles.Add(tileCellObject);
+            //     }
+            // }
+            // if (tiles.Count == 0)
+            // {
+            //     return;
+            // }
+            //
+            // SelectTilesPlayIdleAnimations(tiles, fieldPercentage);
         }
 
         private void SelectTilesPlayIdleAnimations(List<TileCellObject> tiles, int fieldPercentage)

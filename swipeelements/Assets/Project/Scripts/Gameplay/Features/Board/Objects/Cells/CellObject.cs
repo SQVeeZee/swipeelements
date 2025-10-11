@@ -1,21 +1,16 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Entitas;
-using Entitas.Unity;
-using Project.Entitas;
 using Project.Gameplay.Puzzles;
 using UnityEngine;
 
 namespace Project.Gameplay
 {
-    public abstract class CellObject : MonoBehaviour, ICellView
+    public abstract class CellObject : MonoBehaviour
     {
         [SerializeField]
         private Transform _root;
         [SerializeField]
         private SpriteRenderer _spriteRenderer;
-
-        private GameEntity _linkedEntity;
 
         public MergesCell Info { get; protected set; }
 
@@ -25,10 +20,6 @@ namespace Project.Gameplay
         public virtual UniTask DestroyCellAsync(CancellationToken cancellationToken) => default;
         public void SetSortingOrder(int defaultOrder) => _spriteRenderer.sortingOrder = defaultOrder;
 
-        public void Link(IEntity entity)
-        {
-            gameObject.Link(entity);
-            _linkedEntity = (GameEntity)entity;
-        }
+
     }
 }

@@ -11,17 +11,21 @@ public partial class GameEntity {
     public Project.Entitas.SpawnComponent spawn { get { return (Project.Entitas.SpawnComponent)GetComponent(GameComponentsLookup.Spawn); } }
     public bool hasSpawn { get { return HasComponent(GameComponentsLookup.Spawn); } }
 
-    public void AddSpawn(Project.Gameplay.Puzzles.CellType newCellType) {
+    public void AddSpawn(Project.Gameplay.Puzzles.CellType newCellType, Project.Entitas.Coord newCoord, UnityEngine.Vector3 newPosition) {
         var index = GameComponentsLookup.Spawn;
         var component = (Project.Entitas.SpawnComponent)CreateComponent(index, typeof(Project.Entitas.SpawnComponent));
         component.cellType = newCellType;
+        component.coord = newCoord;
+        component.position = newPosition;
         AddComponent(index, component);
     }
 
-    public void ReplaceSpawn(Project.Gameplay.Puzzles.CellType newCellType) {
+    public void ReplaceSpawn(Project.Gameplay.Puzzles.CellType newCellType, Project.Entitas.Coord newCoord, UnityEngine.Vector3 newPosition) {
         var index = GameComponentsLookup.Spawn;
         var component = (Project.Entitas.SpawnComponent)CreateComponent(index, typeof(Project.Entitas.SpawnComponent));
         component.cellType = newCellType;
+        component.coord = newCoord;
+        component.position = newPosition;
         ReplaceComponent(index, component);
     }
 

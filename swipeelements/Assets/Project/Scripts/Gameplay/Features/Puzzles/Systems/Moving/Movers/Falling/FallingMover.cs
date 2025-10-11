@@ -97,14 +97,17 @@ namespace Project.Gameplay
 
         private bool TryGetTileBelow(CellObject cell, out CellObject below)
         {
-            if (!_cellsContainer.TryGetValue(cell, out var coord))
-            {
-                below = null;
-                return false;
-            }
-
-            var belowCoord = coord.Bottom();
-            return _cellsContainer.TryGetValue(belowCoord, out below);
+            //TODO:
+            // if (!_cellsContainer.TryGetValue(cell, out var coord))
+            // {
+            //     below = null;
+            //     return false;
+            // }
+            //
+            // var belowCoord = coord.Bottom();
+            // return _cellsContainer.TryGetValue(belowCoord, out below);\
+            below = null;
+            return false;
         }
     }
 }

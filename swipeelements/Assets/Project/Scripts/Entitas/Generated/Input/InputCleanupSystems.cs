@@ -9,7 +9,6 @@
 public sealed class InputCleanupSystems : Feature {
 
     public InputCleanupSystems(Contexts contexts) {
-        Add(new RemovePointerDownInputSystem(contexts));
-        Add(new RemoveSwipeEventInputSystem(contexts));
+        Add(new DestroySwipeEventInputSystem(contexts));
     }
 }

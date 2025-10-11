@@ -25,7 +25,7 @@ namespace Project.Gameplay
             _uiCamera = uiCamera;
         }
 
-        public Dictionary<Coord, Vector3> CalculateGridPositions(int columns, int rows)
+        public List<(Coord coord, Vector3 position)> CalculateGridPositions(int columns, int rows)
         {
             var cellSize = _gridConfig.CellSize;
             var anchorPosition = GetAnchorPosition();
@@ -58,9 +58,9 @@ namespace Project.Gameplay
             ));
         }
 
-        private static Dictionary<Coord, Vector3> GenerateGridPositions(int columns, int rows, float cellSize, float anchorY)
+        private static List<(Coord coord, Vector3 position)> GenerateGridPositions(int columns, int rows, float cellSize, float anchorY)
         {
-            var dict = new Dictionary<Coord, Vector3>();
+            var dict = new List<(Coord, Vector3)>();
 
             var originX = 0f;
             var originY = 0f;
@@ -73,7 +73,7 @@ namespace Project.Gameplay
                     var coord = new Coord(x, y);
                     var posX = originX + xOffset + x * cellSize;
                     var posY = originY + y * cellSize + anchorY;
-                    dict[coord] = new Vector3(posX, posY, 0f);
+                    dict.Add((coord, new Vector3(posX, posY, 0f)));
                 }
             }
 

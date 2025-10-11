@@ -21,7 +21,6 @@ namespace Project.Gameplay
             BindCancellationTokens();
             BindPanels();
 
-            Container.BindInterfacesAndSelfTo<BoardViewAdapter>().AsSingle();
             Container.BindInterfacesAndSelfTo<EntitasModule>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameplayRunner>().AsSingle();
         }

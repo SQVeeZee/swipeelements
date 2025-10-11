@@ -50,12 +50,7 @@ namespace Project.Gameplay
 
         private void OnMouseButtonDown(Vector2 screenPos)
         {
-            _inputContext.CreateEntity().AddPointerDown(screenPos);
-
             if (!TryRaycast(screenPos, out var startTile) || startTile == null)
-                return;
-
-            if (!_cellsContainer.TryGetValue(startTile, out _))
                 return;
 
             _startTile = startTile;
@@ -63,13 +58,13 @@ namespace Project.Gameplay
 
         private void OnSwiping(SwipeData swipeData)
         {
-            if (_startTile == null || !_cellsContainer.TryGetValue(_startTile, out var from))
+            if (_startTile == null)
             {
                 _startTile = null;
                 return;
             }
 
-            _inputContext.CreateEntity().AddSwipeEvent(new Coord(from.X, from.Y), swipeData.Direction);
+            _inputContext.CreateEntity().AddSwipeEvent(_startTile, swipeData.Direction);
             _startTile = null;
         }
 

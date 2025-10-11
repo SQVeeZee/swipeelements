@@ -1,31 +1,39 @@
-using System.Collections.Generic;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using Entitas;
-using Project.Gameplay.Puzzles;
+using UnityEngine;
 
 namespace Project.Entitas
 {
-    public sealed class MoveTilesSystem : ReactiveSystem<GameEntity>
+    public sealed class MoveTilesSystem : IExecuteSystem
     {
-        private readonly ICellsMovingSystem _cellsMovingSystem;
+        private const float PositionEpsilon = 1e-4f;
+        private readonly IGroup<GameEntity> _moveEntities;
 
-        public MoveTilesSystem(
-            Contexts contexts,
-            ICellsMovingSystem cellsMovingSystem) : base(contexts.game)
-            => _cellsMovingSystem = cellsMovingSystem;
+        public MoveTilesSystem(Contexts contexts) => _moveEntities = contexts.game.GetGroup(GameMatcher.Move);
 
-        protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> c)
-            => c.CreateCollector(GameMatcher.MoveRequest.Added());
-
-        protected override bool Filter(GameEntity e) => e.hasMoveRequest;
-
-        protected override void Execute(List<GameEntity> ents)
+        void IExecuteSystem.Execute()
         {
-            foreach (var gameEntity in ents)
+            foreach (var entity in _moveEntities.GetEntities())
             {
-                var moveData = gameEntity.moveRequest.moveData;
-                _cellsMovingSystem.MoveTileAsync(moveData, CancellationToken.None).Forget();
+                MoveTile(entity, entity.move);
+            }
+        }
+
+        private static void MoveTile(GameEntity gameEntity, MoveComponent moveComponent)
+        {
+            moveComponent.elapsed += Time.deltaTime;
+
+            var t = moveComponent.duration > Mathf.Epsilon
+                ? Mathf.Clamp01(moveComponent.elapsed / moveComponent.duration)
+                : 1f;
+
+            var easedT = moveComponent.curve?.Evaluate(t) ?? t;
+
+            var position = Vector3.LerpUnclamped(moveComponent.start, moveComponent.end, easedT);
+            gameEntity.ReplaceTilePosition(position);
+
+            if (t >= 1f - PositionEpsilon)
+            {
+                gameEntity.RemoveMoveComponent(gameEntity.move.move);
             }
         }
     }

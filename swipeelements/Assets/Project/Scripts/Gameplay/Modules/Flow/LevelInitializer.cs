@@ -79,7 +79,7 @@ namespace Project.Gameplay
         private void CalculateGridPositions(LevelData levelData)
         {
             var gridPositions = _gameGridCalculation.CalculateGridPositions(levelData.Columns, levelData.Rows);
-            _boardSettings.Initialize(gridPositions);
+            // _boardSettings.Initialize(gridPositions);
         }
 
         private void FitCamera(LevelData levelData)
@@ -91,7 +91,6 @@ namespace Project.Gameplay
         public void DisposeLevel()
         {
             _mergesBoard.Dispose();
-            _cellsContainer.Clear();
         }
     }
 }

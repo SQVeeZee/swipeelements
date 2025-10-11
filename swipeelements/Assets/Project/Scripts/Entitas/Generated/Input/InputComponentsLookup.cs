@@ -8,18 +8,15 @@
 //------------------------------------------------------------------------------
 public static class InputComponentsLookup {
 
-    public const int PointerDown = 0;
-    public const int SwipeEvent = 1;
+    public const int SwipeEvent = 0;
 
-    public const int TotalComponents = 2;
+    public const int TotalComponents = 1;
 
     public static readonly string[] componentNames = {
-        "PointerDown",
         "SwipeEvent"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(Project.Entitas.PointerDownComponent),
         typeof(Project.Entitas.SwipeEventComponent)
     };
 }

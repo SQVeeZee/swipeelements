@@ -11,18 +11,18 @@ public partial class InputEntity {
     public Project.Entitas.SwipeEventComponent swipeEvent { get { return (Project.Entitas.SwipeEventComponent)GetComponent(InputComponentsLookup.SwipeEvent); } }
     public bool hasSwipeEvent { get { return HasComponent(InputComponentsLookup.SwipeEvent); } }
 
-    public void AddSwipeEvent(Project.Entitas.Coord newFrom, Project.Gameplay.SwipeDirection newDir) {
+    public void AddSwipeEvent(Project.Gameplay.ITileView newTile, Project.Gameplay.SwipeDirection newDir) {
         var index = InputComponentsLookup.SwipeEvent;
         var component = (Project.Entitas.SwipeEventComponent)CreateComponent(index, typeof(Project.Entitas.SwipeEventComponent));
-        component.from = newFrom;
+        component.tile = newTile;
         component.dir = newDir;
         AddComponent(index, component);
     }
 
-    public void ReplaceSwipeEvent(Project.Entitas.Coord newFrom, Project.Gameplay.SwipeDirection newDir) {
+    public void ReplaceSwipeEvent(Project.Gameplay.ITileView newTile, Project.Gameplay.SwipeDirection newDir) {
         var index = InputComponentsLookup.SwipeEvent;
         var component = (Project.Entitas.SwipeEventComponent)CreateComponent(index, typeof(Project.Entitas.SwipeEventComponent));
-        component.from = newFrom;
+        component.tile = newTile;
         component.dir = newDir;
         ReplaceComponent(index, component);
     }

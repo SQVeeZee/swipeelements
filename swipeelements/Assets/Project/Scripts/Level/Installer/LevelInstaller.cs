@@ -71,7 +71,6 @@ namespace Project.Level
 
         private void BindMoving()
         {
-            Container.BindInterfacesAndSelfTo<CellsMovingSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<CellsMovingController>().AsSingle();
             Container.Bind<CellsMovingConfig>().FromInstance(_cellsMovingConfig).AsSingle();
 

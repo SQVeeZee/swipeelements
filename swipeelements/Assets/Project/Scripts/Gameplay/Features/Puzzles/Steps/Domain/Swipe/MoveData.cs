@@ -15,4 +15,9 @@ namespace Project.Gameplay.Puzzles
 
         public override string ToString() => $"{From.X}:{From.Y} to {To.X}:{To.Y}";
     }
+
+    public static class MoveDataExtensions
+    {
+        public static MoveData Switch(this MoveData moveData) => new(moveData.To, moveData.From);
+    }
 }

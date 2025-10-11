@@ -21,7 +21,7 @@ namespace Project.Gameplay
         public async UniTask DestroyCellAsync(Coord coord, CancellationToken cancellationToken)
         {
             DestroyedCells.Add(coord);
-            await _cellsContainer.DestroyAsync(coord, cancellationToken);
+            // await _cellsContainer.DestroyAsync(coord, cancellationToken);
             DestroyedCells.Remove(coord);
         }
 

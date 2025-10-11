@@ -8,39 +8,75 @@
 //------------------------------------------------------------------------------
 public static class GameComponentsLookup {
 
-    public const int Cell = 0;
-    public const int Coord = 1;
-    public const int Destroyed = 2;
-    public const int Move = 3;
-    public const int MoveRequest = 4;
-    public const int MoveValidate = 5;
-    public const int Spawn = 6;
-    public const int SwitchRequest = 7;
-    public const int Tile = 8;
+    public const int CellCoord = 0;
+    public const int CellPosition = 1;
+    public const int CellTag = 2;
+    public const int CellType = 3;
+    public const int ColumnDirty = 4;
+    public const int Destroyed = 5;
+    public const int Falling = 6;
+    public const int FallRequest = 7;
+    public const int Interactive = 8;
+    public const int Move = 9;
+    public const int MoveConfig = 10;
+    public const int MoveFinished = 11;
+    public const int MoveRequest = 12;
+    public const int Spawn = 13;
+    public const int TileCoord = 14;
+    public const int TilePosition = 15;
+    public const int TileSortOrder = 16;
+    public const int TileTag = 17;
+    public const int TileType = 18;
+    public const int TilePositionListener = 19;
+    public const int TileSortOrderListener = 20;
 
-    public const int TotalComponents = 9;
+    public const int TotalComponents = 21;
 
     public static readonly string[] componentNames = {
-        "Cell",
-        "Coord",
+        "CellCoord",
+        "CellPosition",
+        "CellTag",
+        "CellType",
+        "ColumnDirty",
         "Destroyed",
+        "Falling",
+        "FallRequest",
+        "Interactive",
         "Move",
+        "MoveConfig",
+        "MoveFinished",
         "MoveRequest",
-        "MoveValidate",
         "Spawn",
-        "SwitchRequest",
-        "Tile"
+        "TileCoord",
+        "TilePosition",
+        "TileSortOrder",
+        "TileTag",
+        "TileType",
+        "TilePositionListener",
+        "TileSortOrderListener"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(Project.Entitas.CellComponent),
-        typeof(Project.Entitas.CoordComponent),
+        typeof(Project.Entitas.CellCoordComponent),
+        typeof(Project.Entitas.CellPositionComponent),
+        typeof(Project.Entitas.CellTagComponent),
+        typeof(Project.Entitas.CellTypeComponent),
+        typeof(Project.Entitas.ColumnDirtyComponent),
         typeof(Project.Entitas.DestroyedComponent),
+        typeof(Project.Entitas.FallingComponent),
+        typeof(Project.Entitas.FallRequestComponent),
+        typeof(Project.Entitas.InteractiveComponent),
         typeof(Project.Entitas.MoveComponent),
+        typeof(Project.Entitas.MoveConfigComponent),
+        typeof(Project.Entitas.MoveFinishedComponent),
         typeof(Project.Entitas.MoveRequestComponent),
-        typeof(Project.Entitas.MoveValidateComponent),
         typeof(Project.Entitas.SpawnComponent),
-        typeof(Project.Entitas.SwitchRequestComponent),
-        typeof(Project.Entitas.TileComponent)
+        typeof(Project.Entitas.TileCoordComponent),
+        typeof(Project.Entitas.TilePositionComponent),
+        typeof(Project.Entitas.TileSortOrderComponent),
+        typeof(Project.Entitas.TileTagComponent),
+        typeof(Project.Entitas.TileTypeComponent),
+        typeof(TilePositionListenerComponent),
+        typeof(TileSortOrderListenerComponent)
     };
 }
