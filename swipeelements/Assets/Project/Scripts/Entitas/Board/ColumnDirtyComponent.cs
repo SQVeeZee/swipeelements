@@ -3,10 +3,10 @@ using Entitas.CodeGeneration.Attributes;
 
 namespace Project.Entitas
 {
-    [Game, Cleanup(CleanupMode.RemoveComponent)]
+    [Game]
     public sealed class ColumnDirtyComponent : IComponent
     {
         [PrimaryEntityIndex]
-        public int column;
+        public int value;
     }
 }

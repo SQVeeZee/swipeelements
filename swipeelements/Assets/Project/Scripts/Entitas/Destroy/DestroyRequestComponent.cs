@@ -3,8 +3,8 @@ using Entitas.CodeGeneration.Attributes;
 
 namespace Project.Entitas
 {
-    [Game]
-    public class DestroyRequestComponent : IComponent
+    [Game, Cleanup(CleanupMode.RemoveComponent)]
+    public class DestroyTileRequestComponent : IComponent
     {
         public Coord coord;
     }

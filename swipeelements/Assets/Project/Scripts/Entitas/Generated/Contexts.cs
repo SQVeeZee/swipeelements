@@ -61,9 +61,11 @@ public partial class Contexts : Entitas.IContexts {
 public partial class Contexts {
 
     public const string CellCoord = "CellCoord";
+    public const string CellType = "CellType";
     public const string ColumnDirty = "ColumnDirty";
     public const string TileCoord = "TileCoord";
     public const string TilePosition = "TilePosition";
+    public const string TileType = "TileType";
 
     [Entitas.CodeGeneration.Attributes.PostConstructor]
     public void InitializeEntityIndices() {
@@ -72,10 +74,15 @@ public partial class Contexts {
             game.GetGroup(GameMatcher.CellCoord),
             (e, c) => ((Project.Entitas.CellCoordComponent)c).value));
 
+        game.AddEntityIndex(new Entitas.EntityIndex<GameEntity, Project.Gameplay.Puzzles.CellType>(
+            CellType,
+            game.GetGroup(GameMatcher.CellType),
+            (e, c) => ((Project.Entitas.CellTypeComponent)c).value));
+
         game.AddEntityIndex(new Entitas.PrimaryEntityIndex<GameEntity, int>(
             ColumnDirty,
             game.GetGroup(GameMatcher.ColumnDirty),
-            (e, c) => ((Project.Entitas.ColumnDirtyComponent)c).column));
+            (e, c) => ((Project.Entitas.ColumnDirtyComponent)c).value));
 
         game.AddEntityIndex(new Entitas.PrimaryEntityIndex<GameEntity, Project.Entitas.Coord>(
             TileCoord,
@@ -86,6 +93,11 @@ public partial class Contexts {
             TilePosition,
             game.GetGroup(GameMatcher.TilePosition),
             (e, c) => ((Project.Entitas.TilePositionComponent)c).value));
+
+        game.AddEntityIndex(new Entitas.EntityIndex<GameEntity, Project.Gameplay.Puzzles.CellType>(
+            TileType,
+            game.GetGroup(GameMatcher.TileType),
+            (e, c) => ((Project.Entitas.TileTypeComponent)c).value));
     }
 }
 
@@ -95,8 +107,12 @@ public static class ContextsExtensions {
         return ((Entitas.PrimaryEntityIndex<GameEntity, Project.Entitas.Coord>)context.GetEntityIndex(Contexts.CellCoord)).GetEntity(value);
     }
 
-    public static GameEntity GetEntityWithColumnDirty(this GameContext context, int column) {
-        return ((Entitas.PrimaryEntityIndex<GameEntity, int>)context.GetEntityIndex(Contexts.ColumnDirty)).GetEntity(column);
+    public static System.Collections.Generic.HashSet<GameEntity> GetEntitiesWithCellType(this GameContext context, Project.Gameplay.Puzzles.CellType value) {
+        return ((Entitas.EntityIndex<GameEntity, Project.Gameplay.Puzzles.CellType>)context.GetEntityIndex(Contexts.CellType)).GetEntities(value);
+    }
+
+    public static GameEntity GetEntityWithColumnDirty(this GameContext context, int value) {
+        return ((Entitas.PrimaryEntityIndex<GameEntity, int>)context.GetEntityIndex(Contexts.ColumnDirty)).GetEntity(value);
     }
 
     public static GameEntity GetEntityWithTileCoord(this GameContext context, Project.Entitas.Coord value) {
@@ -105,6 +121,10 @@ public static class ContextsExtensions {
 
     public static GameEntity GetEntityWithTilePosition(this GameContext context, UnityEngine.Vector3 value) {
         return ((Entitas.PrimaryEntityIndex<GameEntity, UnityEngine.Vector3>)context.GetEntityIndex(Contexts.TilePosition)).GetEntity(value);
+    }
+
+    public static System.Collections.Generic.HashSet<GameEntity> GetEntitiesWithTileType(this GameContext context, Project.Gameplay.Puzzles.CellType value) {
+        return ((Entitas.EntityIndex<GameEntity, Project.Gameplay.Puzzles.CellType>)context.GetEntityIndex(Contexts.TileType)).GetEntities(value);
     }
 }
 //------------------------------------------------------------------------------

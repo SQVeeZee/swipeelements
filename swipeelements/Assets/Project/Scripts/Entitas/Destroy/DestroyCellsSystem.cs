@@ -13,15 +13,16 @@ namespace Project.Entitas
         }
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> contexts)
-            => contexts.CreateCollector(GameMatcher.FallingFinished.Added());
+            => contexts.CreateCollector(GameMatcher.DestroyTileRequest.Added());
 
-        protected override bool Filter(GameEntity entity) => entity.hasFallingFinished;
+        protected override bool Filter(GameEntity entity) => entity.hasDestroyTileRequest;
 
         protected override void Execute(List<GameEntity> entities)
         {
             foreach (var entity in entities)
             {
-                // TODO: обработка сущностей
+                entity.isDestroyTile = true;
+                _gameContext.CreateEntity().AddColumnDirty(entity.destroyTileRequest.coord.X);
             }
         }
     }

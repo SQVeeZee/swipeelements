@@ -1,20 +1,14 @@
 using System.Collections.Generic;
 using Entitas;
+using Project.Gameplay.Puzzles;
 
 namespace Project.Entitas
 {
     public sealed class DestroyCellsRequestSystem : ReactiveSystem<GameEntity>
     {
-        private readonly GameContext _game;
-        private readonly LevelContext _level;
-        private readonly IGroup<GameEntity> _tiles;
+        private readonly GameContext _gameContext;
 
-        public DestroyCellsRequestSystem(Contexts contexts) : base(contexts.game)
-        {
-            _game = contexts.game;
-            _level = contexts.level;
-            _tiles = _game.GetGroup(GameMatcher.TileCoord);
-        }
+        public DestroyCellsRequestSystem(Contexts contexts) : base(contexts.game) => _gameContext = contexts.game;
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> c)
             => c.CreateCollector(GameMatcher.FallingFinished.Added());
@@ -23,59 +17,32 @@ namespace Project.Entitas
 
         protected override void Execute(List<GameEntity> events)
         {
-            var cols = _level.levelConfig.LevelData.Columns;
-            var rows = _level.levelConfig.LevelData.Rows;
+            var typesToCheck = CellUtilities.GetTilesTypes();
 
-            var grid = BuildGridSnapshot(cols, rows);
-            var inLine = GridMatch.MarkCellsInLines(grid, cols, rows);
-
-            var toDestroy = GridMatch.CollectRegionsToDestroy(grid, inLine, cols, rows);
-
-            if (toDestroy.Count > 0)
+            foreach (var type in typesToCheck)
             {
-                // MarkDirtyColumns(toDestroy);
-                ApplyDestroyRequests(grid, toDestroy);
-            }
-        }
+                var tiles = _gameContext.GetEntitiesWithTileType(type);
+                TypeLineMatcher.BuildIndex(tiles, out var coords, out var byCoord);
 
-        private GameEntity[,] BuildGridSnapshot(int cols, int rows)
-        {
-            var grid = new GameEntity[cols, rows];
-            var all = _tiles.GetEntities();
-
-            for (var i = 0; i < all.Length; i++)
-            {
-                var e = all[i];
-                var c = e.tileCoord.value;
-
-                if ((uint)c.X < (uint)cols && (uint)c.Y < (uint)rows)
+                if (coords.Count == 0)
                 {
-                    grid[c.X, c.Y] = e;
+                    continue;
                 }
-            }
 
-            return grid;
-        }
-
-        private void ApplyDestroyRequests(GameEntity[,] grid, List<Coord> cells)
-        {
-            for (var i = 0; i < cells.Count; i++)
-            {
-                var coord = cells[i];
-                var gameEntity = grid[coord.X, coord.Y];
-                gameEntity?.AddDestroyRequest(coord);
-            }
-        }
-
-        private void MarkDirtyColumns(List<Coord> cells)
-        {
-            var marked = new HashSet<int>();
-            for (var i = 0; i < cells.Count; i++)
-            {
-                var x = cells[i].X;
-                if (marked.Add(x))
+                var matches = TypeLineMatcher.FindLineMatches(coords);
+                if (matches.Count == 0)
                 {
-                    _game.CreateEntity().AddColumnDirty(x);
+                    continue;
+                }
+
+                foreach (var coord in matches)
+                {
+                    if (!byCoord.TryGetValue(coord, out var gameEntity) || gameEntity == null)
+                    {
+                        continue;
+                    }
+
+                    gameEntity.AddDestroyTileRequest(coord);
                 }
             }
         }

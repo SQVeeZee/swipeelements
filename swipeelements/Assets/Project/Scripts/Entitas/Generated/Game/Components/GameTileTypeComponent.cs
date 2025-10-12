@@ -11,17 +11,17 @@ public partial class GameEntity {
     public Project.Entitas.TileTypeComponent tileType { get { return (Project.Entitas.TileTypeComponent)GetComponent(GameComponentsLookup.TileType); } }
     public bool hasTileType { get { return HasComponent(GameComponentsLookup.TileType); } }
 
-    public void AddTileType(Project.Gameplay.Puzzles.CellType newType) {
+    public void AddTileType(Project.Gameplay.Puzzles.CellType newValue) {
         var index = GameComponentsLookup.TileType;
         var component = (Project.Entitas.TileTypeComponent)CreateComponent(index, typeof(Project.Entitas.TileTypeComponent));
-        component.type = newType;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceTileType(Project.Gameplay.Puzzles.CellType newType) {
+    public void ReplaceTileType(Project.Gameplay.Puzzles.CellType newValue) {
         var index = GameComponentsLookup.TileType;
         var component = (Project.Entitas.TileTypeComponent)CreateComponent(index, typeof(Project.Entitas.TileTypeComponent));
-        component.type = newType;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 

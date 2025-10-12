@@ -9,6 +9,7 @@
 public sealed class GameEventSystems : Feature {
 
     public GameEventSystems(Contexts contexts) {
+        Add(new DestroyTileEventSystem(contexts)); // priority: 0
         Add(new TilePositionEventSystem(contexts)); // priority: 0
         Add(new TileSortOrderEventSystem(contexts)); // priority: 0
     }

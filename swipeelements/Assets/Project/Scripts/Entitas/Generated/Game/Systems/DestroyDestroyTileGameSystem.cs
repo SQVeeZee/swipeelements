@@ -9,18 +9,18 @@
 using System.Collections.Generic;
 using Entitas;
 
-public sealed class RemoveColumnDirtyGameSystem : ICleanupSystem {
+public sealed class DestroyDestroyTileGameSystem : ICleanupSystem {
 
     readonly IGroup<GameEntity> _group;
     readonly List<GameEntity> _buffer = new List<GameEntity>();
 
-    public RemoveColumnDirtyGameSystem(Contexts contexts) {
-        _group = contexts.game.GetGroup(GameMatcher.ColumnDirty);
+    public DestroyDestroyTileGameSystem(Contexts contexts) {
+        _group = contexts.game.GetGroup(GameMatcher.DestroyTile);
     }
 
     public void Cleanup() {
         foreach (var e in _group.GetEntities(_buffer)) {
-            e.RemoveColumnDirty();
+            e.Destroy();
         }
     }
 }

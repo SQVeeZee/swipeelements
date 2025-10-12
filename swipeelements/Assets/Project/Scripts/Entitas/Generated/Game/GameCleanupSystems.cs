@@ -12,7 +12,8 @@ public sealed class GameCleanupSystems : Feature {
         Add(new DestroyDestroyedGameSystem(contexts));
         Add(new RemoveFallingFinishedGameSystem(contexts));
         Add(new RemoveMoveRequestGameSystem(contexts));
-        Add(new RemoveColumnDirtyGameSystem(contexts));
+        Add(new RemoveDestroyTileRequestGameSystem(contexts));
+        Add(new DestroyDestroyTileGameSystem(contexts));
         Add(new RemoveSpawnGameSystem(contexts));
         Add(new RemoveFallingRequestGameSystem(contexts));
         Add(new RemoveMoveFinishedGameSystem(contexts));

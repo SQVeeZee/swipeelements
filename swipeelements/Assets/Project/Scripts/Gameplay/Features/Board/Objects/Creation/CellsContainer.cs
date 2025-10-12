@@ -27,7 +27,10 @@ namespace Project.Gameplay
         {
             var cellObject = _factory.Create(cell, spawnComponent.position, _boardSettings.CellsRoot);
             _cellOrderController.ApplyCellSortOrder(cellObject, spawnComponent.coord);
+            cellObject.Initialize(cell,  () => Return(cellObject));
             return cellObject;
         }
+
+        public void Return(CellObject cellObject) => _factory.Return(cellObject);
     }
 }

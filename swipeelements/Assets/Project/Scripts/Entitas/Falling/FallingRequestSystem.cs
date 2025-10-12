@@ -16,7 +16,7 @@ namespace Project.Entitas
         }
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> contexts)
-            => contexts.CreateCollector(GameMatcher.ColumnDirty);
+            => contexts.CreateCollector(GameMatcher.ColumnDirty.Added());
 
         protected override bool Filter(GameEntity entity) => entity.hasColumnDirty;
 
@@ -25,9 +25,8 @@ namespace Project.Entitas
             foreach (var entity in entities)
             {
                 var rows = _levelContext.levelConfig.LevelData.Rows;
-                var col = entity.columnDirty.column;
+                var col = entity.columnDirty.value;
                 var targetRow = 0;
-
                 for (var y = 0; y < rows; y++)
                 {
                     var coord = new Coord(col, y);
@@ -53,6 +52,7 @@ namespace Project.Entitas
 
                     targetRow++;
                 }
+                entity.RemoveColumnDirty();
             }
         }
     }

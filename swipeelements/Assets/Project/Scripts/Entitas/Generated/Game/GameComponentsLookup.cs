@@ -8,40 +8,44 @@
 //------------------------------------------------------------------------------
 public static class GameComponentsLookup {
 
-    public const int CellCoord = 0;
-    public const int CellPosition = 1;
-    public const int CellTag = 2;
-    public const int CellType = 3;
-    public const int ColumnDirty = 4;
-    public const int Destroyed = 5;
-    public const int DestroyRequest = 6;
-    public const int Falling = 7;
-    public const int FallingConfig = 8;
-    public const int FallingFinished = 9;
-    public const int FallingRequest = 10;
-    public const int Move = 11;
-    public const int MoveConfig = 12;
-    public const int MoveFinished = 13;
-    public const int MoveRequest = 14;
-    public const int Spawn = 15;
-    public const int TileCoord = 16;
-    public const int TilePosition = 17;
-    public const int TileSortOrder = 18;
-    public const int TileTag = 19;
-    public const int TileType = 20;
-    public const int TilePositionListener = 21;
-    public const int TileSortOrderListener = 22;
+    public const int DestroyTileListener = 0;
+    public const int CellCoord = 1;
+    public const int CellPosition = 2;
+    public const int CellTag = 3;
+    public const int CellType = 4;
+    public const int ColumnDirty = 5;
+    public const int Destroyed = 6;
+    public const int DestroyTile = 7;
+    public const int DestroyTileRequest = 8;
+    public const int Falling = 9;
+    public const int FallingConfig = 10;
+    public const int FallingFinished = 11;
+    public const int FallingRequest = 12;
+    public const int Move = 13;
+    public const int MoveConfig = 14;
+    public const int MoveFinished = 15;
+    public const int MoveRequest = 16;
+    public const int Spawn = 17;
+    public const int TileCoord = 18;
+    public const int TilePosition = 19;
+    public const int TileSortOrder = 20;
+    public const int TileTag = 21;
+    public const int TileType = 22;
+    public const int TilePositionListener = 23;
+    public const int TileSortOrderListener = 24;
 
-    public const int TotalComponents = 23;
+    public const int TotalComponents = 25;
 
     public static readonly string[] componentNames = {
+        "DestroyTileListener",
         "CellCoord",
         "CellPosition",
         "CellTag",
         "CellType",
         "ColumnDirty",
         "Destroyed",
-        "DestroyRequest",
+        "DestroyTile",
+        "DestroyTileRequest",
         "Falling",
         "FallingConfig",
         "FallingFinished",
@@ -61,13 +65,15 @@ public static class GameComponentsLookup {
     };
 
     public static readonly System.Type[] componentTypes = {
+        typeof(DestroyTileListenerComponent),
         typeof(Project.Entitas.CellCoordComponent),
         typeof(Project.Entitas.CellPositionComponent),
         typeof(Project.Entitas.CellTagComponent),
         typeof(Project.Entitas.CellTypeComponent),
         typeof(Project.Entitas.ColumnDirtyComponent),
         typeof(Project.Entitas.DestroyedComponent),
-        typeof(Project.Entitas.DestroyRequestComponent),
+        typeof(Project.Entitas.DestroyTileComponent),
+        typeof(Project.Entitas.DestroyTileRequestComponent),
         typeof(Project.Entitas.FallingComponent),
         typeof(Project.Entitas.FallingConfigComponent),
         typeof(Project.Entitas.FallingFinishedComponent),

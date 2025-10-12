@@ -11,17 +11,17 @@ public partial class GameEntity {
     public Project.Entitas.ColumnDirtyComponent columnDirty { get { return (Project.Entitas.ColumnDirtyComponent)GetComponent(GameComponentsLookup.ColumnDirty); } }
     public bool hasColumnDirty { get { return HasComponent(GameComponentsLookup.ColumnDirty); } }
 
-    public void AddColumnDirty(int newColumn) {
+    public void AddColumnDirty(int newValue) {
         var index = GameComponentsLookup.ColumnDirty;
         var component = (Project.Entitas.ColumnDirtyComponent)CreateComponent(index, typeof(Project.Entitas.ColumnDirtyComponent));
-        component.column = newColumn;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceColumnDirty(int newColumn) {
+    public void ReplaceColumnDirty(int newValue) {
         var index = GameComponentsLookup.ColumnDirty;
         var component = (Project.Entitas.ColumnDirtyComponent)CreateComponent(index, typeof(Project.Entitas.ColumnDirtyComponent));
-        component.column = newColumn;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 
