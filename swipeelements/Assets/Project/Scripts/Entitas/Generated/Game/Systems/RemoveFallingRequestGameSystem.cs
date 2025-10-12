@@ -9,18 +9,18 @@
 using System.Collections.Generic;
 using Entitas;
 
-public sealed class RemoveFallRequestGameSystem : ICleanupSystem {
+public sealed class RemoveFallingRequestGameSystem : ICleanupSystem {
 
     readonly IGroup<GameEntity> _group;
     readonly List<GameEntity> _buffer = new List<GameEntity>();
 
-    public RemoveFallRequestGameSystem(Contexts contexts) {
-        _group = contexts.game.GetGroup(GameMatcher.FallRequest);
+    public RemoveFallingRequestGameSystem(Contexts contexts) {
+        _group = contexts.game.GetGroup(GameMatcher.FallingRequest);
     }
 
     public void Cleanup() {
         foreach (var e in _group.GetEntities(_buffer)) {
-            e.RemoveFallRequest();
+            e.RemoveFallingRequest();
         }
     }
 }

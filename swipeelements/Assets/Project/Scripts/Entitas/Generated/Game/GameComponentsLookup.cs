@@ -14,23 +14,25 @@ public static class GameComponentsLookup {
     public const int CellType = 3;
     public const int ColumnDirty = 4;
     public const int Destroyed = 5;
-    public const int Falling = 6;
-    public const int FallRequest = 7;
-    public const int Interactive = 8;
-    public const int Move = 9;
-    public const int MoveConfig = 10;
-    public const int MoveFinished = 11;
-    public const int MoveRequest = 12;
-    public const int Spawn = 13;
-    public const int TileCoord = 14;
-    public const int TilePosition = 15;
-    public const int TileSortOrder = 16;
-    public const int TileTag = 17;
-    public const int TileType = 18;
-    public const int TilePositionListener = 19;
-    public const int TileSortOrderListener = 20;
+    public const int DestroyRequest = 6;
+    public const int Falling = 7;
+    public const int FallingConfig = 8;
+    public const int FallingFinished = 9;
+    public const int FallingRequest = 10;
+    public const int Move = 11;
+    public const int MoveConfig = 12;
+    public const int MoveFinished = 13;
+    public const int MoveRequest = 14;
+    public const int Spawn = 15;
+    public const int TileCoord = 16;
+    public const int TilePosition = 17;
+    public const int TileSortOrder = 18;
+    public const int TileTag = 19;
+    public const int TileType = 20;
+    public const int TilePositionListener = 21;
+    public const int TileSortOrderListener = 22;
 
-    public const int TotalComponents = 21;
+    public const int TotalComponents = 23;
 
     public static readonly string[] componentNames = {
         "CellCoord",
@@ -39,9 +41,11 @@ public static class GameComponentsLookup {
         "CellType",
         "ColumnDirty",
         "Destroyed",
+        "DestroyRequest",
         "Falling",
-        "FallRequest",
-        "Interactive",
+        "FallingConfig",
+        "FallingFinished",
+        "FallingRequest",
         "Move",
         "MoveConfig",
         "MoveFinished",
@@ -63,9 +67,11 @@ public static class GameComponentsLookup {
         typeof(Project.Entitas.CellTypeComponent),
         typeof(Project.Entitas.ColumnDirtyComponent),
         typeof(Project.Entitas.DestroyedComponent),
+        typeof(Project.Entitas.DestroyRequestComponent),
         typeof(Project.Entitas.FallingComponent),
-        typeof(Project.Entitas.FallRequestComponent),
-        typeof(Project.Entitas.InteractiveComponent),
+        typeof(Project.Entitas.FallingConfigComponent),
+        typeof(Project.Entitas.FallingFinishedComponent),
+        typeof(Project.Entitas.FallingRequestComponent),
         typeof(Project.Entitas.MoveComponent),
         typeof(Project.Entitas.MoveConfigComponent),
         typeof(Project.Entitas.MoveFinishedComponent),

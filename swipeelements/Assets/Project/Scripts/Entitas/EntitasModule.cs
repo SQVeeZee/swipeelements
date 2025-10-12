@@ -30,14 +30,17 @@ namespace Project.Entitas
         public void Initialize()
         {
             var levelData = _levelController.GetCurrentLevel();
-            CreateSystems(Contexts.sharedInstance, levelData, _cellsMovingConfig.GetSettings(CellMoveType.Moving));
+            CreateSystems(Contexts.sharedInstance, levelData,
+                _cellsMovingConfig.GetSettings(CellMoveType.Moving),
+                _cellsMovingConfig.GetSettings(CellMoveType.Falling));
         }
 
-        private void CreateSystems(Contexts contexts, LevelData levelData, MoveSettings moveSettings)
+        private void CreateSystems(Contexts contexts, LevelData levelData, MoveSettings moveSettings, MoveSettings fallingSettings)
         {
             _systems = new GameSystems(contexts, _diContainer);
             contexts.level.SetLevelConfig(levelData);
             contexts.game.SetMoveConfig(moveSettings);
+            contexts.game.SetFallingConfig(fallingSettings);
             _systems.Initialize();
         }
 

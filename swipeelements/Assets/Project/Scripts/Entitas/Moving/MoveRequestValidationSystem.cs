@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Entitas;
-using Project.Gameplay;
 using Project.Gameplay.Puzzles;
 
 namespace Project.Entitas
@@ -21,15 +20,14 @@ namespace Project.Entitas
         {
             foreach (var requestedTile in requests)
             {
-                if (requestedTile is not { isInteractive: true, hasTileType: true })
+                if (!requestedTile.IsInteractable())
                 {
                     continue;
                 }
                 var moveData = requestedTile.moveRequest.moveData;
                 requestedTile.AddMoveComponent(_gameContext, moveData);
 
-                var toEntity = _gameContext.GetEntityWithTileCoord(moveData.To);
-                if (toEntity is { isInteractive: true, hasTileType: true })
+                if (_gameContext.TryGetEntityWithTileCoord(moveData.To, out var toEntity) && toEntity.IsInteractable())
                 {
                     toEntity.AddMoveComponent(_gameContext, moveData.Switch());
                 }

@@ -5,8 +5,8 @@ using Project.Gameplay.Puzzles;
 namespace Project.Entitas
 {
     [Game, Cleanup(CleanupMode.RemoveComponent)]
-    public sealed class FallRequestComponent : IComponent
+    public sealed class FallingFinishedComponent : IComponent
     {
-        public MoveData moveData;
+        public MoveData value;
     }
 }

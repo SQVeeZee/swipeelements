@@ -8,25 +8,33 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly Project.Entitas.FallingComponent fallingComponent = new Project.Entitas.FallingComponent();
+    public Project.Entitas.FallingComponent falling { get { return (Project.Entitas.FallingComponent)GetComponent(GameComponentsLookup.Falling); } }
+    public bool hasFalling { get { return HasComponent(GameComponentsLookup.Falling); } }
 
-    public bool isFalling {
-        get { return HasComponent(GameComponentsLookup.Falling); }
-        set {
-            if (value != isFalling) {
-                var index = GameComponentsLookup.Falling;
-                if (value) {
-                    var componentPool = GetComponentPool(index);
-                    var component = componentPool.Count > 0
-                            ? componentPool.Pop()
-                            : fallingComponent;
+    public void AddFalling(Project.Gameplay.Puzzles.MoveData newMoveData, UnityEngine.Vector3 newStart, UnityEngine.Vector3 newEnd, float newSpeed, float newElapsed) {
+        var index = GameComponentsLookup.Falling;
+        var component = (Project.Entitas.FallingComponent)CreateComponent(index, typeof(Project.Entitas.FallingComponent));
+        component.moveData = newMoveData;
+        component.start = newStart;
+        component.end = newEnd;
+        component.speed = newSpeed;
+        component.elapsed = newElapsed;
+        AddComponent(index, component);
+    }
 
-                    AddComponent(index, component);
-                } else {
-                    RemoveComponent(index);
-                }
-            }
-        }
+    public void ReplaceFalling(Project.Gameplay.Puzzles.MoveData newMoveData, UnityEngine.Vector3 newStart, UnityEngine.Vector3 newEnd, float newSpeed, float newElapsed) {
+        var index = GameComponentsLookup.Falling;
+        var component = (Project.Entitas.FallingComponent)CreateComponent(index, typeof(Project.Entitas.FallingComponent));
+        component.moveData = newMoveData;
+        component.start = newStart;
+        component.end = newEnd;
+        component.speed = newSpeed;
+        component.elapsed = newElapsed;
+        ReplaceComponent(index, component);
+    }
+
+    public void RemoveFalling() {
+        RemoveComponent(GameComponentsLookup.Falling);
     }
 }
 

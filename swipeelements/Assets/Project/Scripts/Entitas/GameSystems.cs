@@ -17,12 +17,19 @@ namespace Project.Entitas
             Add(diContainer.Instantiate<BoardInitialSpawnSystem>(new object[] { contexts }));
 
             //puzzle
+            //moving
             Add(new MoveRequestValidationSystem(contexts));
             Add(diContainer.Instantiate<MoveTilesSystem>(new object[] { contexts }));
             Add(new BoardUpdateSystem(contexts));
-            Add(new SortOrderSystem(contexts));
 
-            // Add(new PlanGravitySystem(contexts));
+
+            Add(new FallingRequestSystem(contexts));
+            Add(new FallingTilesSystem(contexts));
+
+            Add(new DestroyCellsRequestSystem(contexts));
+            // Add(new FallingTilesSystem(contexts));
+
+            Add(new SortOrderSystem(contexts));
 
             // Events (Generated)
             // Add(new InputEventSystems(contexts));

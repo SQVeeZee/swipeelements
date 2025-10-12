@@ -10,10 +10,11 @@ public sealed class GameCleanupSystems : Feature {
 
     public GameCleanupSystems(Contexts contexts) {
         Add(new DestroyDestroyedGameSystem(contexts));
+        Add(new RemoveFallingFinishedGameSystem(contexts));
         Add(new RemoveMoveRequestGameSystem(contexts));
-        Add(new RemoveFallRequestGameSystem(contexts));
         Add(new RemoveColumnDirtyGameSystem(contexts));
         Add(new RemoveSpawnGameSystem(contexts));
+        Add(new RemoveFallingRequestGameSystem(contexts));
         Add(new RemoveMoveFinishedGameSystem(contexts));
     }
 }

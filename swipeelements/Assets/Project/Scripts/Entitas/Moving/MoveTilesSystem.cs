@@ -8,7 +8,10 @@ namespace Project.Entitas
         private const float PositionEpsilon = 1e-4f;
         private readonly IGroup<GameEntity> _moveEntities;
 
-        public MoveTilesSystem(Contexts contexts) => _moveEntities = contexts.game.GetGroup(GameMatcher.Move);
+        public MoveTilesSystem(Contexts contexts)
+        {
+            _moveEntities = contexts.game.GetGroup(GameMatcher.Move);
+        }
 
         void IExecuteSystem.Execute()
         {
